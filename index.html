@@ -54,7 +54,7 @@ var formatD = d3.format("+,.0f");
 var immin, immax, exmin, exmax;
 
 var projection = d3.geo.albersUsa()
-        .scale(1000)
+        .scale(100)
         .translate([w / 2 , h / 2 ]);
 
 //Define path generator
@@ -111,7 +111,25 @@ d3.csv("initial_data/coming.csv", function (data) {
 d3.csv("initial_data/going.csv", function (data) {
     going = data;
 
-    d3.json("initial_data/buenar.json", function (json) {
+    d3.csv("initial_data/circle_coordinates.csv", function (data) {
+        var cc = data;
+
+        g.selectAll("circle")
+                .data(cc)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d) {
+                    return parseFloat(d.clong);
+                })
+                .attr("cy", function(d) {
+                    return parseFloat(d.clat);
+                })
+                .attr("r", 5)
+                .attr("class", "circ")
+                .attr("id", function(d) {return d.nombre;});
+    });
+
+    /*d3.json("initial_data/us-all.geo.json", function (json) {
 
         for (var i = 0; i < data.length; i++) {
             var dataName = data[i].state;
@@ -210,7 +228,7 @@ d3.csv("initial_data/going.csv", function (data) {
                 .on("click", function(d) {clicked(d)});
 
 
-    });
+    });*/
 });
 
 function toolOver(v, thepath) {
