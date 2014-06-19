@@ -80,7 +80,8 @@ var svg = d3.select("#map")
         .append("svg")
         .attr("width", w)
         .attr("height", h)
-        .style("background", "#fff");
+        .style("background", "#fff")
+        .append("g");
 
 
 var fp = d3.format(".1f");
@@ -307,7 +308,7 @@ d3.csv("initial_data/going.csv", function (data) {
                 })
                 .attr("class", "circ")
                 .attr("id", function(d) {
-                    return d.numId;
+                    return getElementId(d.id);
                 })
             .attr("fill", function(d) {
                     var diff = d.properties.total_imm - d.properties.total_emm;
@@ -402,8 +403,7 @@ function toolMove2(mx, my, home, end, v1, v2) {
 
 function clicked(selected) {
     //var coming = selected.properties;
-    var selname = selected.id,
-        htmlId = '#' + selected.numId;
+    var selname = selected.id;
 
     /*
      d3.selectAll(".circ")
@@ -424,17 +424,25 @@ function clicked(selected) {
             .attr("class", "goingline")
 
             .attr("d", function(d,i) {
+                var htmiId = getElementId(d.Estacion);
                 var finalval = coming[i][selname] - going[i][selname];
-                var theState = d3.select(htmlId);
+                var theState = d3.select('#' + htmiId);
+
+                if(!theState[0][0]) {
+                    var t;
+                }
 
                 if(!isNaN(finalval)) {
                     var startx = path.centroid(theState[0][0].__data__)[0];
                     var starty = path.centroid(theState[0][0].__data__)[1];
 
                     if(finalval > 0) {
+                        console.log("M" + startx + "," + starty + " Q" + (startx + homex)/2 + " " + (starty + homey)/1.5 +" " + homex+" "   + homey);
                         return "M" + startx + "," + starty + " Q" + (startx + homex)/2 + " " + (starty + homey)/1.5 +" " + homex+" "   + homey;
+                        //return "M" + startx + " " + starty + " L" + (startx + homex)/2 + " " + (starty + homey)/1.5 +" " + homex+" "   + homey;
 
                     } else {
+                        console.log("M" + homex + "," + homey + " Q" + (startx + homex)/2 + " " + (starty + homey)/2.5 +" " + startx+" "   + starty);
                         return "M" + homex + "," + homey + " Q" + (startx + homex)/2 + " " + (starty + homey)/2.5 +" " + startx+" "   + starty;
                     }
                 }
@@ -490,6 +498,11 @@ function tweenDash() {
 }
 
 d3.select(self.frameElement).style("height", "700px");
+
+function getElementId(name) {
+    var local = name.split(' ').join('');
+    return local;
+}
 
 </script>
 
