@@ -80,8 +80,7 @@ var svg = d3.select("#map")
         .append("svg")
         .attr("width", w)
         .attr("height", h)
-        .style("background", "#fff")
-        .append("g");
+        .style("background", "#fff");
 
 
 var fp = d3.format(".1f");
@@ -103,7 +102,9 @@ var tooltip2 = d3.select("#maincontainer")
 
 var g = svg.append("g");
 
-
+d3.html("BA.svg", function(data) {
+    g.append(data);
+});
 
 
 var coming, going;
@@ -162,29 +163,6 @@ d3.csv("initial_data/going.csv", function (data) {
                 feature.properties[sumName] = sum;
             }
         }
-
-/*        //Find the corresponding state inside the GeoJSON
-        for (var j = 0; j < json.features.length; j++) {
-            var jsonState = json.features[j].properties.name;
-
-            if (dataName == jsonState) {
-
-                matched = true;
-                json.features[j].properties.state = dataName;
-                json.features[j].id = dataName;
-                json.features[j].abbrev = data[i].abbrev;
-                json.features[j].ind = i;
-
-                for (var propt in tempObj) {
-                    if(!isNaN(tempObj[propt])) {
-                        json.features[j].properties[propt] = tempObj[propt];
-                    }
-
-                }
-                break;
-            }
-        }*/
-
 
         var points = [], pxls, obj, x, y;
         for(var i= 0, j= data.length; i<j; i++) {
@@ -246,46 +224,6 @@ d3.csv("initial_data/going.csv", function (data) {
             w - deltaW,
             h + deltaH
         ]);
-
-        console.log(deltaH);
-        console.log(deltaW);
-
-/*        g.selectAll("circle")
-                .data(points)
-                .enter()
-                .append("circle")
-                .attr("cx", function(d) {
-                    //return parseFloat(d.clong)*-1;
-                    //projection.translate([w-139487 , h+84289]);
-                    return path.centroid(d)[0];
-
-                })
-                .attr("cy", function(d) {
-                    return path.centroid(d)[1];
-                })
-                .attr("r", 5)
-                .attr("class", "circ")
-                .attr("id", function(d) {return d.nombre;})
-                .attr("fill", "#65a89d")
-                .attr("fill-opacity", "0.5")
-                .attr("stroke", "#fff")
-                .attr("stroke-weight", "0.5")*/
-
-
-
-        //Bind data and create one path per GeoJSON feature
-/*        g.selectAll("path")
-                .data(json.features)
-                .enter()
-                .append("path")
-                .attr("class", "state")
-                .attr("id", function(d) {
-                    return d.properties.state;
-                })
-                .attr("d", path)
-                .attr("stroke-width", 0.5)
-                .style("stroke", "#666")
-                .style("fill", "#fff");*/
 
         g.selectAll("circle")
                 .data(points)
@@ -402,14 +340,7 @@ function toolMove2(mx, my, home, end, v1, v2) {
 
 
 function clicked(selected) {
-    //var coming = selected.properties;
     var selname = selected.id;
-
-    /*
-     d3.selectAll(".circ")
-     .attr("fill-opacity", "0.2");
-     */
-
     var homex = path.centroid(selected)[0];
     var homey = path.centroid(selected)[1];
 
