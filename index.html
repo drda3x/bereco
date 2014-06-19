@@ -20,7 +20,7 @@
 
         #tt2 { pointer-events: none;color:white;}
 
-        #tipContainer2 {  font-size:16px;position:absolute;width:250px;z-index:100;background-repeat:no-repeat;text-align:left;line-height:20px;}
+        #tipContainer2 {  font-size:16px;position:absolute;width:270px;z-index:100;background-repeat:no-repeat;text-align:left;line-height:20px;}
 
         #tipLocation2 {font-weight:normal;font-family:Georgia; font-style: Italic; color:white;margin:0px;padding:10px 10px;background:#333;font-size:14px;}
 
@@ -359,11 +359,7 @@ function clicked(selected) {
                 var finalval = coming[i][selname] - going[i][selname];
                 var theState = d3.select('#' + htmiId);
 
-                if(!theState[0][0]) {
-                    var t;
-                }
-
-                if(!isNaN(finalval)) {
+                if(!isNaN(finalval) && selname != d.Estacion) {
                     var startx = path.centroid(theState[0][0].__data__)[0];
                     var starty = path.centroid(theState[0][0].__data__)[1];
 
@@ -406,7 +402,7 @@ function clicked(selected) {
                 var m = d3.mouse(this);
                 mx = m[0];
                 my = m[1];
-                return toolMove2(mx, my, selname, d.state, coming[i][selname], going[i][selname]);
+                return toolMove2(mx, my, selname, d.Estacion, coming[i][selname], going[i][selname]);
             })
             .on("mouseout", function (d) {
                 return toolOut2(d, this);
