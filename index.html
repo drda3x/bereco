@@ -119,14 +119,16 @@ d3.csv("initial_data/going.csv", function (data) {
 
         var lastid = 0;
         function getId() {
-            return ((++lastid < 10) ? '0'+lastid : ''+lastid);
+            //return ((++lastid < 10) ? '0'+lastid : ''+lastid);
+            return ++lastid;
         }
 
         function Structure(name, clong, clat) {
             this.type = 'Feature';
-            this.id = getId();
+            this.id = name;
+            this.numId = 'crkl_' + getId();
             this.properties = {
-                name: name
+              //  name: name
             };
             this.geometry = {
                 type: 'Point',
@@ -140,7 +142,7 @@ d3.csv("initial_data/going.csv", function (data) {
                 matched = false;
 
             for(; i<j; i++) {
-                if(data[i].Estacion == feature.properties.name) {
+                if(data[i].Estacion == feature.id) {
                     matched = true;
                     break;
                 }
@@ -302,12 +304,10 @@ d3.csv("initial_data/going.csv", function (data) {
                 .attr("r", function(d) {
                     var diff = d.properties.total_imm - d.properties.total_emm;
                     return circleSize(Math.sqrt(Math.abs(diff)/Math.PI));
-                    return 5;
-
                 })
                 .attr("class", "circ")
                 .attr("id", function(d) {
-                    return d.name;
+                    return d.numId;
                 })
             .attr("fill", function(d) {
                     var diff = d.properties.total_imm - d.properties.total_emm;
@@ -321,7 +321,6 @@ d3.csv("initial_data/going.csv", function (data) {
                 .attr("fill-opacity", "0.5")
                 .attr("stroke", "#fff")
                 .attr("stroke-weight", "0.5")
-
 
                 .on("mouseover", function (d) {
                     return toolOver(d, this);
@@ -403,7 +402,8 @@ function toolMove2(mx, my, home, end, v1, v2) {
 
 function clicked(selected) {
     //var coming = selected.properties;
-    var selname = selected.name;
+    var selname = selected.id,
+        htmlId = '#' + selected.numId;
 
     /*
      d3.selectAll(".circ")
@@ -423,11 +423,9 @@ function clicked(selected) {
             .enter().append("path")
             .attr("class", "goingline")
 
-            .attr("d", function(d,i)
-            {
-                var abb = d.abbrev;
+            .attr("d", function(d,i) {
                 var finalval = coming[i][selname] - going[i][selname];
-                var theState = d3.select("#" + abb);
+                var theState = d3.select(htmlId);
 
                 if(!isNaN(finalval)) {
                     var startx = path.centroid(theState[0][0].__data__)[0];
