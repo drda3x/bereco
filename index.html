@@ -111,32 +111,7 @@ d3.csv("initial_data/coming.csv", function (data) {
 d3.csv("initial_data/going.csv", function (data) {
     going = data;
 
-    d3.csv("initial_data/circle_coordinates.csv", function (data) {
-        var cc = data;
-
-        g.selectAll("circle")
-                .data(cc)
-                .enter()
-                .append("circle")
-                .attr("cx", function(d) {
-                    //return parseFloat(d.clong)*-1;
-                    var t = path;
-                    return path.centroid(d)[0];
-
-                })
-                .attr("cy", function(d) {
-                    return parseFloat(d.clat)*-1;
-                })
-                .attr("r", 5)
-                .attr("class", "circ")
-                .attr("id", function(d) {return d.nombre;})
-                .attr("fill", "#65a89d")
-                .attr("fill-opacity", "0.5")
-                .attr("stroke", "#fff")
-                .attr("stroke-weight", "0.5")
-    });
-
-    /*d3.json("initial_data/us-all.geo.json", function (json) {
+    d3.json("initial_data/states.json", function (json) {
 
         for (var i = 0; i < data.length; i++) {
             var dataName = data[i].state;
@@ -235,7 +210,7 @@ d3.csv("initial_data/going.csv", function (data) {
                 .on("click", function(d) {clicked(d)});
 
 
-    });*/
+    });
 });
 
 function toolOver(v, thepath) {
