@@ -307,7 +307,7 @@ d3.csv("initial_data/going.csv", function (data) {
                 })
                 .attr("class", "circ")
                 .attr("id", function(d) {
-                    return d.toString();
+                    return d.name;
                 })
             .attr("fill", function(d) {
                     var diff = d.properties.total_imm - d.properties.total_emm;
@@ -403,7 +403,7 @@ function toolMove2(mx, my, home, end, v1, v2) {
 
 function clicked(selected) {
     //var coming = selected.properties;
-    var selname = selected.id;
+    var selname = selected.name;
 
     /*
      d3.selectAll(".circ")
