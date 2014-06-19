@@ -1,0 +1,20 @@
+{"type": "FeatureCollection", "features": [
+    {
+        "type": "Feature",
+        "id": "01",
+        "properties": {
+            "name": "Alabama"
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [-58.612246, -34.509411],
+                    [-58.345141, -34.518506],
+                    [-58.319735, -34.669547],
+                    [-58.561434, -34.70131]
+                ]
+            ]
+        }
+    }
+]}
