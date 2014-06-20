@@ -48,6 +48,16 @@ var w = 900;
 var h = 1000;
 var centered;
 
+// Поправки для карты
+var xDiff = 0.000016794754908635066,
+    yDiff = 0.0000031254319741090232,
+    x0 = 367.75,
+    y0 = 31,
+    base = {
+        lon: -58.451645304584,
+        lat: -34.53150220979
+    };
+
 var formatC = d3.format(",.0f");
 var formatD = d3.format("+,.0f");
 
@@ -71,6 +81,8 @@ var circleSize = d3.scale.linear().range([0,25000]).domain([0, 137175]);
 var lineSize = d3.scale.linear().range([2,25]).domain([0, 35000]);
 
 var fillcolor = d3.scale.linear().range(colors).domain(immdomain);
+
+
 
 
 //Create SVG element
