@@ -7,7 +7,7 @@
     font-size: 16px;
     position: absolute;
     width: 180px;
-    z-index: 100;
+    zindex: 100;
     background-repeat: no-repeat;
     text-align: left;
     line-height: 20px;
@@ -15,8 +15,8 @@
 
 #tipLocation {
     font-weight: normal;
-    font-family: Georgia;
-    font-style: Italic;
+    font-family: Calibri;
+    font-style: Normal;
     color: white;
     margin: 0px;
     padding: 10px 10px;
@@ -27,7 +27,7 @@
 #tipCount {
     font-weight: bold;
     font-size: 32px;
-    letter-spacing: -1px;
+    letterspacing: -1px;
     margin: 0px;
     padding: 0px 10px 10px 10px;
     color: #333;
@@ -50,8 +50,8 @@
 #tipContainer2 {
     font-size: 16px;
     position: absolute;
-    width: 270px;
-    z-index: 100;
+    width: 350px;
+    zindex: 100;
     background-repeat: no-repeat;
     text-align: left;
     line-height: 20px;
@@ -59,8 +59,8 @@
 
 #tipLocation2 {
     font-weight: normal;
-    font-family: Georgia;
-    font-style: Italic;
+    font-family: Calibri;
+    font-style: Normal;
     color: white;
     margin: 0px;
     padding: 10px 10px;
@@ -71,7 +71,7 @@
 #tipCount2 {
     font-weight: bold;
     font-size: 32px;
-    letter-spacing: -1px;
+    letterspacing: -1px;
     margin: 0px;
     padding: 0px 10px 10px 10px;
     color: #333;
@@ -98,5 +98,6 @@
 
 #maincontainer {
     width: 900px;
-    height: 1000px
+    height: 1000px;
+    position: absolute;
 }

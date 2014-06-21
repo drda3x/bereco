@@ -34,11 +34,7 @@
             .style("position", "absolute")
             .style("visibility", "hidden");
 
-        function getElementId(name) {
-            var local = name.split(' ').join('');
-            return local;
-        }
-
+        // tooltip event-handlers
         function toolOver(v, thepath) {
             d3.select(thepath).style({
                 "fill-opacity": "0.7",
@@ -55,18 +51,23 @@
             return tooltip.style("visibility", "hidden");
         };
 
-
         function toolMove(mx, my, data) {
-            if (mx < 120) {
-                mx = 120
-            }
-            ;
 
-            if (my < 40) {
-                my = 40
-            }
-            ;
-            return tooltip.style("top", my + -140 + "px").style("left", mx - 120 + "px").html("<div id='tipContainer'><div id='tipLocation'><b>" + data.id + "</b></div><div id='tipKey'>Migration in: <b>" + formatC(data.properties.total_imm) + "</b><br>Migration out: <b>" + formatC(data.properties.total_emm) + "</b><br>Net migration: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b></div><div class='tipClear'></div> </div>");
+            var x = ((mx < 120) ? 120 : mx),
+                y = ((my < 40) ? 40 : my);
+
+            return tooltip.style("top", y + -140 + "px").style("left", x - 120 + "px")
+                .html("<div id='tipContainer'>" +
+                        "<div id='tipLocation'>" +
+                            "<b>" + data.id + "</b>" +
+                        "</div>" +
+                        "<div id='tipKey'>" +
+                            "Migration in: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
+                            "Migration out: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
+                            "Net migration: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
+                        "</div>" +
+                        "<div class='tipClear'></div> </div>"
+                );
         };
 
         function toolOver2(v, thepath) {
@@ -86,19 +87,33 @@
         };
 
         function toolMove2(mx, my, home, end, v1, v2) {
-            var diff = v1 - v2;
-            if (mx < 120) {
-                mx = 120
-            }
-            ;
+            var diff = v1 - v2,
+                x = ((mx < 120) ? 120 : mx),
+                y = ((my < 40) ? 40 : my);
 
-            if (my < 40) {
-                my = 40
-            }
-            ;
-            return tooltip2.style("top", my + -140 + "px").style("left", mx - 120 + "px").html("<div id='tipContainer2'><div id='tipLocation'><b>" + home + "/" + end + "</b></div><div id='tipKey2'>Migration, " + home + " to " + end + ": <b>" + formatC(v2) + "</b><br>Migration, " + end + " to " + home + ": <b>" + formatC(v1) + "</b><br>Net change, " + home + ": <b>" + formatD(v1 - v2) + "</b></div><div class='tipClear'></div> </div>");
+            return tooltip2.style("top", my + -140 + "px")
+                           .style("left", mx - 120 + "px")
+                           .html("<div id='tipContainer2'>" +
+                                    "<div id='tipLocation'>" +
+                                        "<b>" + home + "/" + end + "</b>" +
+                                    "</div>" +
+                                    "<div id='tipKey2'>Migration, " + home + " to " + end + ": " +
+                                        "<b>" + formatC(v2) + "</b><br>" +
+                                        "Migration, " + end + " to " + home + ": <b>" + formatC(v1) + "</b><br>" +
+                                        "Net change, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
+                                    "</div>" +
+                                    "<div class='tipClear'></div> " +
+                                 "</div>"
+                           );
         };
 
+        // Get id of the circle
+        function getElementId(name) {
+            var local = name.split(' ').join('');
+            return local;
+        }
+
+        // Circle event handler
         function clicked(selected) {
             var selname = selected.id;
             var homex = path.centroid(selected)[0];
@@ -130,9 +145,7 @@
                         }
                     }
                 })
-
                 .call(transition)
-
                 .attr("stroke-width", function(d,i) {
                     var finalval = coming[i][selname] - going[i][selname];
 
@@ -179,6 +192,7 @@
 
         d3.select(self.frameElement).style("height", "700px");
 
+        // Map options
         var width = 900,
             height = 1000;
 
@@ -210,6 +224,7 @@
                 .attr('class', 'mainMap');
         });
 
+        // Binding data
         var coming, going;
         d3.csv('initial_data/coming.csv', function (data) {
             coming = data;
