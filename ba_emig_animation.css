@@ -20,8 +20,10 @@
     color: white;
     margin: 0px;
     padding: 10px 10px;
-    background: #333;
-    font-size: 14px;
+    background: #5A5A5A;
+    border-top: 1px solid #D8D8D8;
+    border-left: 1px solid #D8D8D8;
+    font-size: 16px;
 }
 
 #tipCount {
@@ -35,11 +37,12 @@
 
 #tipKey {
     font-weight: normal;
-    font-size: 10px;
+    font-size: 16px;
     color: #333;
     margin: 0px;
     padding: 5px 0px 5px 10px;
-    background: rgba(218, 218, 218, 0.5);
+    border-top: 1px solid #ffffff;
+    background: rgba(216, 216, 216, 0.5);
 }
 
 #tt2 {
@@ -50,7 +53,7 @@
 #tipContainer2 {
     font-size: 16px;
     position: absolute;
-    width: 350px;
+    width: 450px;
     zindex: 100;
     background-repeat: no-repeat;
     text-align: left;
@@ -64,7 +67,8 @@
     color: white;
     margin: 0px;
     padding: 10px 10px;
-    background: #333;
+    /*background: #333;*/
+    background: #5A5A5A;
     font-size: 14px;
 }
 
@@ -79,7 +83,7 @@
 
 #tipKey2 {
     font-weight: normal;
-    font-size: 10px;
+    fontsize: 10px;
     color: #333;
     margin: 0px;
     padding: 5px 0px 5px 10px;
@@ -100,4 +104,8 @@
     width: 900px;
     height: 1000px;
     position: absolute;
+}
+
+g circle {
+    filter:url('#circleShadow');
 }

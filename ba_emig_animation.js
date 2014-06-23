@@ -9,6 +9,10 @@
 
     window.onload = function () {
 
+        var interfaceColors = {
+            bright: '#4BACC6',
+            dark: '#C0504D'
+        }
         var colors = ["#EDF8FB","#41083e"];
         var immdomain = [24431,537148];
         var emmdomain = [20056,566986];
@@ -62,9 +66,9 @@
                             "<b>" + data.id + "</b>" +
                         "</div>" +
                         "<div id='tipKey'>" +
-                            "Migration in: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
-                            "Migration out: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
-                            "Net migration: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
+                            "Bicis recibidas: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
+                            "Bicis entregadas: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
+                            "Diferencia: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
                         "</div>" +
                         "<div class='tipClear'></div> </div>"
                 );
@@ -97,10 +101,10 @@
                                     "<div id='tipLocation'>" +
                                         "<b>" + home + "/" + end + "</b>" +
                                     "</div>" +
-                                    "<div id='tipKey2'>Migration, " + home + " to " + end + ": " +
+                                    "<div id='tipKey'>Migration, " + home + " a " + end + ": " +
                                         "<b>" + formatC(v2) + "</b><br>" +
-                                        "Migration, " + end + " to " + home + ": <b>" + formatC(v1) + "</b><br>" +
-                                        "Net change, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
+                                        "Viajes, " + end + " a " + home + ": <b>" + formatC(v1) + "</b><br>" +
+                                        "Diferencia, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
                                     "</div>" +
                                     "<div class='tipClear'></div> " +
                                  "</div>"
@@ -154,10 +158,9 @@
                 .attr("stroke", function(d,i) {
                     var finalval = coming[i][selname] - going[i][selname];
                     if(finalval > 0) {
-
-                        return "#65a89d";
+                        return interfaceColors.bright;
                     } else {
-                        return "#a96a46";
+                        return interfaceColors.dark;
                     }
 
                 })
@@ -213,6 +216,28 @@
 
         var g = svg.append("g")
             .attr('z-index', 1000);
+
+        var filter = g.append('filter')
+                .attr('id', 'circleShadow')
+                .attr('x0', '-50%')
+            .attr('y0','-50%')
+            .attr('width','200%')
+            .attr('height','200%');
+
+        filter.append('feOffset')
+            .attr('dx','-1')
+            .attr('dy','-3')
+            .attr('result','blur');
+
+        filter.append('feGaussianBlur')
+            .attr('in', 'SourceAlpha')
+            .attr('stdDeviation','2');
+
+        filter.append('feComposite')
+            .attr('operator','out')
+            .attr('in','SourceGraphic')
+            .attr('in2','blur')
+            .attr('operator','ower');
 
         // Main map
         d3.json('initial_data/ba-topo.json', function (json) {
@@ -316,16 +341,17 @@
                     })
                     .attr("fill", function (d) {
                         var diff = d.properties.total_imm - d.properties.total_emm;
-                        if (diff > 0) {
-                            return "#65a89d";
+                        if (diff < 0) {
+                            //return interfaceColors.bright;
+                            return '#4BACC6';
                         } else {
-                            return "#a96a46";
+                            return interfaceColors.dark;
                         }
 
                     })
                     .attr("fill-opacity", "0.5")
                     .attr("stroke", "#fff")
-                    .attr("stroke-weight", "0.5")
+                    .attr("stroke-weight", "2")
                     .on("mouseover", function (d) {
                         return toolOver(d, this);
                     })
