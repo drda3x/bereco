@@ -1,7 +1,3 @@
-/**
- * <<Описание файла>>
- */
-
 (function (global) {
     "use strict";
 
@@ -13,15 +9,14 @@
             bright: '#4BACC6',
             dark: '#C0504D'
         }
-        var colors = ["#EDF8FB","#41083e"];
-        var immdomain = [24431,537148];
-        var emmdomain = [20056,566986];
-
-        var circleSize = d3.scale.linear().range([0,25000]).domain([0, 137175]);
-        var lineSize = d3.scale.linear().range([2,25]).domain([0, 35000]);
-        var fillcolor = d3.scale.linear().range(colors).domain(immdomain);
-        var formatC = d3.format(",.0f");
-        var formatD = d3.format("+,.0f");
+        var colors = ["#EDF8FB","#41083e"],
+            immdomain = [24431,537148],
+             emmdomain = [20056,566986],
+             circleSize = d3.scale.linear().range([0,25000]).domain([0, 137175]),
+             lineSize = d3.scale.linear().range([2,25]).domain([0, 35000]),
+             fillcolor = d3.scale.linear().range(colors).domain(immdomain),
+             formatC = d3.format(",.0f"),
+             formatD = d3.format("+,.0f");
 
         //initialize html tooltip
         var tooltip = d3.select("#maincontainer")
@@ -61,16 +56,16 @@
                 y = ((my < 40) ? 40 : my);
 
             return tooltip.style("top", y + -140 + "px").style("left", x - 120 + "px")
-                .html("<div id='tipContainer'>" +
-                        "<div id='tipLocation'>" +
-                            "<b>" + data.id + "</b>" +
-                        "</div>" +
-                        "<div id='tipKey'>" +
-                            "Bicis recibidas: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
-                            "Bicis entregadas: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
-                            "Diferencia: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
-                        "</div>" +
-                        "<div class='tipClear'></div> </div>"
+                .html("<div id='tipContainer' class='small'>" +
+                    "<div id='tipLocation'>" +
+                    "<b>" + data.id + "</b>" +
+                    "</div>" +
+                    "<div id='tipKey'>" +
+                    "Bicis recibidas: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
+                    "Bicis entregadas: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
+                    "Diferencia: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
+                    "</div>" +
+                    "<div class='tipClear'></div> </div>"
                 );
         };
 
@@ -96,19 +91,19 @@
                 y = ((my < 40) ? 40 : my);
 
             return tooltip2.style("top", my + -140 + "px")
-                           .style("left", mx - 120 + "px")
-                           .html("<div id='tipContainer2'>" +
-                                    "<div id='tipLocation'>" +
-                                        "<b>" + home + "/" + end + "</b>" +
-                                    "</div>" +
-                                    "<div id='tipKey'>Migration, " + home + " a " + end + ": " +
-                                        "<b>" + formatC(v2) + "</b><br>" +
-                                        "Viajes, " + end + " a " + home + ": <b>" + formatC(v1) + "</b><br>" +
-                                        "Diferencia, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
-                                    "</div>" +
-                                    "<div class='tipClear'></div> " +
-                                 "</div>"
-                           );
+                .style("left", mx - 120 + "px")
+                .html("<div id='tipContainer' class='large'>" +
+                    "<div id='tipLocation'>" +
+                    "<b>" + home + "/" + end + "</b>" +
+                    "</div>" +
+                    "<div id='tipKey'>Viajes, " + home + " a " + end + ": " +
+                    "<b>" + formatC(v2) + "</b><br>" +
+                    "Viajes, " + end + " a " + home + ": <b>" + formatC(v1) + "</b><br>" +
+                    "Diferencia, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
+                    "</div>" +
+                    "<div class='tipClear'></div> " +
+                    "</div>"
+                );
         };
 
         // Get id of the circle
@@ -137,6 +132,10 @@
                     var htmiId = getElementId(d.Estacion);
                     var finalval = coming[i][selname] - going[i][selname];
                     var theState = d3.select('#' + htmiId);
+
+                    if(!theState[0][0]) {
+                        var r;
+                    }
 
                     if(!isNaN(finalval) && selname != d.Estacion) {
                         var startx = path.centroid(theState[0][0].__data__)[0];
@@ -216,28 +215,6 @@
 
         var g = svg.append("g")
             .attr('z-index', 1000);
-
-        var filter = g.append('filter')
-                .attr('id', 'circleShadow')
-                .attr('x0', '-50%')
-            .attr('y0','-50%')
-            .attr('width','200%')
-            .attr('height','200%');
-
-        filter.append('feOffset')
-            .attr('dx','-1')
-            .attr('dy','-3')
-            .attr('result','blur');
-
-        filter.append('feGaussianBlur')
-            .attr('in', 'SourceAlpha')
-            .attr('stdDeviation','2');
-
-        filter.append('feComposite')
-            .attr('operator','out')
-            .attr('in','SourceGraphic')
-            .attr('in2','blur')
-            .attr('operator','ower');
 
         // Main map
         d3.json('initial_data/ba-topo.json', function (json) {
@@ -341,9 +318,8 @@
                     })
                     .attr("fill", function (d) {
                         var diff = d.properties.total_imm - d.properties.total_emm;
-                        if (diff < 0) {
-                            //return interfaceColors.bright;
-                            return '#4BACC6';
+                        if (diff > 0) {
+                            return interfaceColors.bright;
                         } else {
                             return interfaceColors.dark;
                         }
