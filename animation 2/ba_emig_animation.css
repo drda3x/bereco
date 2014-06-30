@@ -1,0 +1,73 @@
+#tt {
+    pointer-events: none;
+    color: white;
+}
+
+#tipContainer {
+    font-size: 14px;
+    position: absolute;
+    zindex: 100;
+    background-repeat: no-repeat;
+    text-align: left;
+    line-height: 20px;
+}
+
+#tipLocation {
+    font-weight: normal;
+    font-family: Calibri;
+    font-style: Normal;
+    color: white;
+    margin: 0px;
+    padding: 10px 10px;
+    background: #5A5A5A;
+    border-top: 1px solid #D8D8D8;
+    border-left: 1px solid #D8D8D8;
+}
+
+.large {
+    width: 400px;
+}
+
+.small {
+    width: 180px;
+}
+
+#tipCount {
+    font-weight: bold;
+    font-size: 32px;
+    letterspacing: -1px;
+    margin: 0px;
+    padding: 0px 10px 10px 10px;
+    color: #333;
+}
+
+#tipKey {
+    font-weight: normal;
+    /*font-size: 16px;*/
+    color: #333;
+    margin: 0px;
+    padding: 5px 0px 5px 10px;
+    border-top: 1px solid #ffffff;
+    background: rgba(216, 216, 216, 0.5);
+}
+
+.tipClear {
+    clear: both;
+}
+
+.mainMap {
+    stroke: #000;
+    stroke-width: 0.25px;
+    fill: #fff;
+}
+
+#maincontainer {
+    width: 900px;
+    height: 1000px;
+    position: absolute;
+}
+
+/*
+g circle {
+    filter:url('#circleShadow');
+}*/
