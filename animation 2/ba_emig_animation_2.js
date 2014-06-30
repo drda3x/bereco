@@ -9,6 +9,11 @@
 
     window.onload = function () {
 
+        var interfaceColors = {
+            bright: '#4BACC6',
+            dark: '#C0504D'
+        };
+        
         var colors = ["#EDF8FB","#41083e"];
         var immdomain = [24431,537148];
         var emmdomain = [20056,566986];
@@ -57,14 +62,14 @@
                 y = ((my < 40) ? 40 : my);
 
             return tooltip.style("top", y + -140 + "px").style("left", x - 120 + "px")
-                .html("<div id='tipContainer'>" +
+                .html("<div id='tipContainer' class='small'>" +
                         "<div id='tipLocation'>" +
                             "<b>" + data.id + "</b>" +
                         "</div>" +
                         "<div id='tipKey'>" +
-                            "Migration in: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
-                            "Migration out: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
-                            "Net migration: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
+                            "Bicis recibidas: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
+                            "Bicis entregadas: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
+                            "Diferencia: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
                         "</div>" +
                         "<div class='tipClear'></div> </div>"
                 );
@@ -93,14 +98,14 @@
 
             return tooltip2.style("top", my + -140 + "px")
                            .style("left", mx - 120 + "px")
-                           .html("<div id='tipContainer2'>" +
+                           .html("<div id='tipContainer' class='large'>" +
                                     "<div id='tipLocation'>" +
                                         "<b>" + home + "/" + end + "</b>" +
                                     "</div>" +
-                                    "<div id='tipKey2'>Migration, " + home + " to " + end + ": " +
+                                    "<div id='tipKey'>Viajes, " + home + " a " + end + ": " +
                                         "<b>" + formatC(v2) + "</b><br>" +
-                                        "Migration, " + end + " to " + home + ": <b>" + formatC(v1) + "</b><br>" +
-                                        "Net change, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
+                                        "Viajes, " + end + " a " + home + ": <b>" + formatC(v1) + "</b><br>" +
+                                        "Diferencia, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
                                     "</div>" +
                                     "<div class='tipClear'></div> " +
                                  "</div>"
@@ -109,8 +114,7 @@
 
         // Get id of the circle
         function getElementId(name) {
-            var local = name.split(' ').join('');
-            return local;
+            return name.replace(/[\s|\W]/gi, '');
         }
 
         // Circle event handler
@@ -130,11 +134,12 @@
                 .attr("class", "goingline")
 
                 .attr("d", function(d,i) {
-                    var htmiId = getElementId(d.Estacion);
+                    var nameKey = Object.keys(d)[0];
+                    var htmiId = getElementId(d[nameKey]);
                     var finalval = coming[i][selname] - going[i][selname];
                     var theState = d3.select('#' + htmiId);
 
-                    if(!isNaN(finalval) && selname != d.Estacion) {
+                    if(!isNaN(finalval) && selname != d[nameKey]) {
                         var startx = path.centroid(theState[0][0].__data__)[0];
                         var starty = path.centroid(theState[0][0].__data__)[1];
 
@@ -147,17 +152,26 @@
                 })
                 .call(transition)
                 .attr("stroke-width", function(d,i) {
-                    var finalval = coming[i][selname] - going[i][selname];
+                    var finalval = coming[i][selname] - going[i][selname],
+                        l = lineSize(parseFloat(Math.abs(finalval)));
 
-                    return lineSize(parseFloat(Math.abs(finalval)));
+                    if(l > 15) {
+                        return l / 3;
+                    } else if (l > 9) {
+                        return l / 2;
+                    } else {
+                        return l * 1.5;
+                    }
+
+                    //return 3;
                 })
                 .attr("stroke", function(d,i) {
                     var finalval = coming[i][selname] - going[i][selname];
-                    if(finalval > 0) {
-
-                        return "#65a89d";
+                    if(finalval >= 0) {
+                        //return interfaceColors.bright;
+                        return null;
                     } else {
-                        return "#a96a46";
+                        return interfaceColors.dark;
                     }
 
                 })
@@ -168,10 +182,12 @@
                     return toolOver2(d, this);
                 })
                 .on("mousemove", function (d,i) {
-                    var m = d3.mouse(this);
-                    var mx = m[0];
-                    var my = m[1];
-                    return toolMove2(mx, my, selname, d.Estacion, coming[i][selname], going[i][selname]);
+                    var m = d3.mouse(this),
+                        name_key = Object.keys(d)[0],
+                        mx = m[0],
+                        my = m[1];
+                    console.log(name_key);
+                    return toolMove2(mx, my, selname, d[name_key], coming[i][selname], going[i][selname]);
                 })
                 .on("mouseout", function (d) {
                     return toolOut2(d, this);
@@ -194,11 +210,11 @@
 
         // Map options
         var width = 900,
-            height = 1000;
+            height = 880;
 
         var projection = d3.geo.mercator()
-            .scale(260000)
-            .center([-58.427, -34.572]);
+            .scale(25000)
+            .center([-58.647, -34.272]);
 
         var path = d3.geo.path()
             .projection(projection);
@@ -233,8 +249,9 @@
         d3.csv('initial_data/going.csv', function (data) {
             going = data;
 
-            d3.csv("initial_data/circle_coordinates.csv", function (data) {
-                var w1, h1;
+            d3.csv("initial_data/Lat_Long.csv", function (data) {
+                var name_key = Object.keys(coming[0])[0],
+                    w1, h1;
 
                 var lastid = 0;
 
@@ -261,7 +278,7 @@
                         matched = false;
 
                     for (; i < j; i++) {
-                        if (data[i].Estacion == feature.id) {
+                        if (data[i][name_key] == feature.id) {
                             matched = true;
                             break;
                         }
@@ -274,17 +291,18 @@
                             var value = parseInt(d[prop]);
                             if (value) {
                                 feature.properties[prop] = value;
-                                sum += value;
-                            }
+                            sum += value;
+                        }
                         }
                         feature.properties[sumName] = sum;
                     }
                 }
 
                 var points = [], pxls, obj, x, y;
+
                 for (var i = 0, j = data.length; i < j; i++) {
 
-                    obj = new Structure(data[i].nombre, data[i].clong, data[i].clat);
+                    obj = new Structure(data[i].Partido, data[i].Long, data[i].Lat);
 
                     getComingOrGoingData(obj, coming, 'total_imm');
                     getComingOrGoingData(obj, going, 'total_emm');
@@ -307,8 +325,12 @@
                         return ctroid;
                     })
                     .attr("r", function (d) {
-                        var diff = d.properties.total_imm - d.properties.total_emm;
-                        return circleSize(Math.sqrt(Math.abs(diff) / Math.PI))*2;
+                        var diff = d.properties.total_imm - d.properties.total_emm,
+                            r = circleSize(Math.sqrt(Math.abs(diff) / Math.PI));
+                            if(r<10) {
+                                return r*3;
+                            }
+                        return r/2;
                     })
                     .attr("class", "circ")
                     .attr("id", function (d) {
@@ -317,15 +339,15 @@
                     .attr("fill", function (d) {
                         var diff = d.properties.total_imm - d.properties.total_emm;
                         if (diff > 0) {
-                            return "#65a89d";
+                            return interfaceColors.bright;
                         } else {
-                            return "#a96a46";
+                            return interfaceColors.dark;
                         }
 
                     })
                     .attr("fill-opacity", "0.5")
                     .attr("stroke", "#fff")
-                    .attr("stroke-weight", "0.5")
+                    .attr("stroke-weight", "2")
                     .on("mouseover", function (d) {
                         return toolOver(d, this);
                     })
