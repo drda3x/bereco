@@ -62,7 +62,7 @@
                 y = ((my < 40) ? 40 : my);
 
             return tooltip.style("top", y + -140 + "px").style("left", x - 120 + "px")
-                .html("<div id='tipContainer'>" +
+                .html("<div id='tipContainer' class='small'>" +
                         "<div id='tipLocation'>" +
                             "<b>" + data.id + "</b>" +
                         "</div>" +
@@ -98,11 +98,11 @@
 
             return tooltip2.style("top", my + -140 + "px")
                            .style("left", mx - 120 + "px")
-                           .html("<div id='tipContainer2'>" +
+                           .html("<div id='tipContainer' class='large'>" +
                                     "<div id='tipLocation'>" +
                                         "<b>" + home + "/" + end + "</b>" +
                                     "</div>" +
-                                    "<div id='tipKey'>Migration, " + home + " a " + end + ": " +
+                                    "<div id='tipKey'>Viajes, " + home + " a " + end + ": " +
                                         "<b>" + formatC(v2) + "</b><br>" +
                                         "Viajes, " + end + " a " + home + ": <b>" + formatC(v1) + "</b><br>" +
                                         "Diferencia, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
@@ -152,18 +152,26 @@
                 })
                 .call(transition)
                 .attr("stroke-width", function(d,i) {
-                    /*var finalval = coming[i][selname] - going[i][selname],
-                        l = lineSize(parseFloat(Math.abs(finalval)));*/
-                    return 3;
+                    var finalval = coming[i][selname] - going[i][selname],
+                        l = lineSize(parseFloat(Math.abs(finalval)));
+
+                    if(l > 15) {
+                        return l / 3;
+                    } else if (l > 9) {
+                        return l / 2;
+                    } else {
+                        return l * 1.5;
+                    }
+
+                    //return 3;
                 })
                 .attr("stroke", function(d,i) {
                     var finalval = coming[i][selname] - going[i][selname];
-                    if(finalval > 0) {
-                        return interfaceColors.bright;
-                    } else if(finalval < 0) {
-                        return interfaceColors.dark;
-                    } else {
+                    if(finalval >= 0) {
+                        //return interfaceColors.bright;
                         return null;
+                    } else {
+                        return interfaceColors.dark;
                     }
 
                 })

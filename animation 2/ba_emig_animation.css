@@ -43,7 +43,6 @@
 
 #tipKey {
     font-weight: normal;
-    /*font-size: 16px;*/
     color: #333;
     margin: 0px;
     padding: 5px 0px 5px 10px;
@@ -66,8 +65,3 @@
     height: 1000px;
     position: absolute;
 }
-
-/*
-g circle {
-    filter:url('#circleShadow');
-}*/
