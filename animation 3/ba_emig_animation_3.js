@@ -64,12 +64,12 @@
             return tooltip.style("top", y + -140 + "px").style("left", x - 120 + "px")
                 .html("<div id='tipContainer' class='small'>" +
                         "<div id='tipLocation'>" +
-                            "<b>" + data.id + "</b>" +
+                            "<b>" + data.properties.Nombre + "</b>" +
                         "</div>" +
                         "<div id='tipKey'>" +
-                            "Bicis recibidas: <b>" + formatC(data.properties.total_imm) + "</b><br>" +
-                            "Bicis entregadas: <b>" + formatC(data.properties.total_emm) + "</b><br>" +
-                            "Diferencia: <b>" + formatC((data.properties.total_imm - data.properties.total_emm)) + "</b>" +
+                            "Bicis recibidas: <b>" + formatC(data.properties.emigData.coming) + "</b><br>" +
+                            "Bicis entregadas: <b>" + formatC(data.properties.emigData.going) + "</b><br>" +
+                            "Diferencia: <b>" + formatC((data.properties.emigData.coming - data.properties.emigData.going)) + "</b>" +
                         "</div>" +
                         "<div class='tipClear'></div> </div>"
                 );
@@ -127,13 +127,12 @@
                 .attr("stroke-dasharray", 0)
                 .remove();
 
-
             g.selectAll(".goingline")
                 .data(going)
                 .enter().append("path")
                 .attr("class", "goingline")
 
-                .attr("d", function(d,i) {
+                .attr("d", function(d) {
                     var nameKey = Object.keys(d)[0];
                     var htmiId = getElementId(d[nameKey]);
                     var finalval = coming[i][selname] - going[i][selname];
@@ -241,78 +240,39 @@
         });
 
         // Binding data
-        var coming, going;
-        d3.csv('initial_data/coming.csv', function (data) {
-            coming = data;
-        });
+        var going;
 
-        d3.csv('initial_data/going.csv', function (data) {
-            going = data;
+        d3.csv('initial_data/Coming_Going.csv', function (data) {
+            going = data[0];
+            var totalInn = 0,
+                totalOut = 0;
 
-            d3.csv("initial_data/Lat_Long.csv", function (data) {
-                var name_key = Object.keys(coming[0])[0],
-                    w1, h1;
+            for(var key in going) {
+                var arr = going[key].split(','),
+                    len = arr.length;
 
-                var lastid = 0;
-
-                function getId() {
-                    return ++lastid;
-                }
-
-                function Structure(name, clong, clat) {
-                    this.type = 'Feature';
-                    this.id = name;
-                    this.numId = 'crkl_' + getId();
-                    this.properties = {
-                        //  name: name
+                if(len > 1) {
+                    going[key] = {
+                        coming: parseInt(arr[0]),
+                        going: parseInt(arr[1])
                     };
-                    this.geometry = {
-                        type: 'Point',
-                        coordinates: [parseFloat(clong), parseFloat(clat)]
-                    }
+                    totalInn += going[key].coming;
+                    totalOut += going[key].going;
                 }
+            }
 
-                function getComingOrGoingData(feature, data, sumName) {
-                    var i = 0,
-                        j = data.length,
-                        matched = false;
+            going.CENTRO = {
+                coming: totalInn,
+                going: totalOut
+            };
 
-                    for (; i < j; i++) {
-                        if (data[i][name_key] == feature.id) {
-                            matched = true;
-                            break;
-                        }
-                    }
-
-                    if (matched) {
-                        var d = data[i],
-                            sum = 0;
-                        for (var prop in d) {
-                            var value = parseInt(d[prop]);
-                            if (value) {
-                                feature.properties[prop] = value;
-                            sum += value;
-                        }
-                        }
-                        feature.properties[sumName] = sum;
-                    }
-                }
-
-                var points = [], pxls, obj, x, y;
-
-                for (var i = 0, j = data.length; i < j; i++) {
-
-                    obj = new Structure(data[i].Partido, data[i].Long, data[i].Lat);
-
-                    getComingOrGoingData(obj, coming, 'total_imm');
-                    getComingOrGoingData(obj, going, 'total_emm');
-
-                    points.push(obj);
-                    pxls = path.centroid(obj);
+            d3.json("initial_data/Lat_Long.json", function (data) {
+                for(var i= 0, j= data.features.length; i<j; i++) {
+                    data.features[i].properties.emigData = going[data.features[i].properties.Nombre];
                 }
 
                 g.selectAll("circle")
-                    .data(points)
+                    .data(data.features)
                     .enter().append("circle")
                     .attr("cx", function (d) {
                         var ctroid;
@@ -325,19 +285,16 @@
                         return ctroid;
                     })
                     .attr("r", function (d) {
-                        var diff = d.properties.total_imm - d.properties.total_emm,
-                            r = circleSize(Math.sqrt(Math.abs(diff) / Math.PI));
-                            if(r<10) {
-                                return r*3;
-                            }
-                        return r/2;
+                        var diff = d.properties.emigData.coming - d.properties.emigData.going,
+                        r = circleSize(Math.sqrt(Math.abs(diff) / Math.PI)) * 3;
+                        return (r < 2) ? r*5 : r;
                     })
                     .attr("class", "circ")
                     .attr("id", function (d) {
-                        return getElementId(d.id);
+                        return getElementId(d.properties.Nombre);
                     })
                     .attr("fill", function (d) {
-                        var diff = d.properties.total_imm - d.properties.total_emm;
+                        var diff = d.properties.emigData.coming - d.properties.emigData.going;
                         if (diff > 0) {
                             return interfaceColors.bright;
                         } else {
