@@ -120,8 +120,8 @@
         // Circle event handler
         function clicked(selected) {
             var selname = selected.id;
-            var homex = path.centroid(selected)[0];
-            var homey = path.centroid(selected)[1];
+            var homex = path.centroid(centro)[0];
+            var homey = path.centroid(centro)[1];
 
             g.selectAll(".goingline")
                 .attr("stroke-dasharray", 0)
@@ -131,27 +131,24 @@
                 .data(going)
                 .enter().append("path")
                 .attr("class", "goingline")
-
                 .attr("d", function(d) {
-                    var nameKey = Object.keys(d)[0];
-                    var htmiId = getElementId(d[nameKey]);
-                    var finalval = coming[i][selname] - going[i][selname];
+                    var t = selected;
+                    var htmiId = getElementId(d.name);
+                    var finalval = d.coming - d.going;
                     var theState = d3.select('#' + htmiId);
 
-                    if(!isNaN(finalval) && selname != d[nameKey]) {
+                    if(!isNaN(finalval)) {
                         var startx = path.centroid(theState[0][0].__data__)[0];
                         var starty = path.centroid(theState[0][0].__data__)[1];
 
-                        if(finalval > 0) {
-                            return "M" + startx + "," + starty + " Q" + (startx + homex)/2 + " " + (starty + homey)/1.5 +" " + homex+" "   + homey;
-                        } else {
-                            return "M" + homex + "," + homey + " Q" + (startx + homex)/2 + " " + (starty + homey)/2.5 +" " + startx+" "   + starty;
+                        if (d.name != centro.properties.Nombre) {
+                            return "M" + homex + "," + homey + " Q" + (startx + homex) / 2 + " " + (starty + homey) / 2.5 + " " + startx + " " + starty;
                         }
                     }
                 })
                 .call(transition)
                 .attr("stroke-width", function(d,i) {
-                    var finalval = coming[i][selname] - going[i][selname],
+                    var finalval = d.coming - d.going,
                         l = lineSize(parseFloat(Math.abs(finalval)));
 
                     if(l > 15) {
@@ -161,14 +158,11 @@
                     } else {
                         return l * 1.5;
                     }
-
-                    //return 3;
                 })
                 .attr("stroke", function(d,i) {
-                    var finalval = coming[i][selname] - going[i][selname];
+                    var finalval = d.coming - d.going;
                     if(finalval >= 0) {
-                        //return interfaceColors.bright;
-                        return null;
+                        return interfaceColors.bright;
                     } else {
                         return interfaceColors.dark;
                     }
@@ -182,11 +176,9 @@
                 })
                 .on("mousemove", function (d,i) {
                     var m = d3.mouse(this),
-                        name_key = Object.keys(d)[0],
                         mx = m[0],
                         my = m[1];
-                    console.log(name_key);
-                    return toolMove2(mx, my, selname, d[name_key], coming[i][selname], going[i][selname]);
+                    return toolMove2(mx, my, 'CENTRO', d.name, d.coming, d.going);
                 })
                 .on("mouseout", function (d) {
                     return toolOut2(d, this);
@@ -236,39 +228,55 @@
                 .enter()
                 .append('path')
                 .attr('d', path)
-                .attr('class', 'mainMap');
+                .attr('class', 'mainMap')
+                .attr('id', function(d) {
+                    return getElementId(d.properties.PARTIDO);
+                })
+                .attr('fill', '#000');
         });
 
         // Binding data
-        var going;
+        var going = [],
+            goingHash = {},
+            centro;
 
-        d3.csv('initial_data/Coming_Going.csv', function (data) {
-            going = data[0];
-            var totalInn = 0,
-                totalOut = 0;
+        function GoingHashStructure(coming, going, name) {
+            this.coming = coming;
+            this.going = going;
+            this.name = name;
+        }
 
-            for(var key in going) {
-                var arr = going[key].split(','),
-                    len = arr.length;
+        d3.csv('initial_data/Coming_Going.csv', function (csvData) {
+            var data = csvData[0],
+                totalInn = 0,
+                totalOut = 0,
+                strct;
 
-                if(len > 1) {
-                    going[key] = {
-                        coming: parseInt(arr[0]),
-                        going: parseInt(arr[1])
-                    };
-                    totalInn += going[key].coming;
-                    totalOut += going[key].going;
+            for(var key in data) {
+                var arr = data[key].split(',');
+
+                if(arr.length > 1) {
+                    strct = new GoingHashStructure(parseInt(arr[0]), parseInt(arr[1]), key);
+                    going.push(strct);
+                    goingHash[key] = strct;
+                    totalInn += strct.coming;
+                    totalOut += strct.going;
                 }
             }
 
-            going.CENTRO = {
-                coming: totalInn,
-                going: totalOut
-            };
+            strct = new GoingHashStructure(totalInn, totalOut, 'CENTRO');
+            going.push(strct);
+            goingHash.CENTRO = strct;
+
+            strct = null;
 
             d3.json("initial_data/Lat_Long.json", function (data) {
                 for(var i= 0, j= data.features.length; i<j; i++) {
-                    data.features[i].properties.emigData = going[data.features[i].properties.Nombre];
+                    data.features[i].properties.emigData = goingHash[data.features[i].properties.Nombre];
+
+                    if(data.features[i].properties.Nombre == goingHash.CENTRO.name) {
+                        centro = data.features[i];
+                    }
                 }
 
                 g.selectAll("circle")
