@@ -232,7 +232,7 @@
                 .attr('id', function(d) {
                     return getElementId(d.properties.PARTIDO);
                 })
-                .attr('fill', '#000');
+                .attr('fill', '#C64697');
         });
 
         // Binding data
