@@ -232,7 +232,17 @@
                 .attr('id', function(d) {
                     return getElementId(d.properties.PARTIDO);
                 })
-                .attr('fill', '#C64697');
+                .attr('fill', function(d) {
+                    var id = getElementId(d.properties.PARTIDO);
+                    colors = {
+                        CiudaddeBuenosAires: '#E1A8ED',
+                        SANFERNANDO: '#B01D98',
+                        VICENTELOPEZ: '#B01D98',
+                        SANISIDRO: '#B01D98',
+                        TIGRE: '#B01D98'
+                    };
+                    return ((colors.hasOwnProperty(id) ?  colors[id] : '#C64697'));
+                });    // #B01D98
         });
 
         // Binding data
