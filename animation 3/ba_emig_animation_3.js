@@ -256,6 +256,13 @@
             this.name = name;
         }
 
+        function VehicleValueStructure(area, type, input, output) {
+            this.area = area;
+            this.type = type;
+            this.in = input;
+            this.out = output;
+        }
+
         d3.csv('initial_data/Coming_Going.csv', function (csvData) {
             var data = csvData[0],
                 totalInn = 0,
@@ -263,10 +270,15 @@
                 strct;
 
             for(var key in data) {
-                var arr = data[key].split(',');
+                var arr = data[key].split(','),
+                    area = key.split(' '),
+                    type = area[area.length - 1];
+
+                area.length--;
+                area = area.join('');
 
                 if(arr.length > 1) {
-                    strct = new GoingHashStructure(parseInt(arr[0]), parseInt(arr[1]), key);
+                    strct = new VehicleValueStructure(area, type, parseInt(arr[0]), parseInt(arr[1]));
                     going.push(strct);
                     goingHash[key] = strct;
                     totalInn += strct.coming;
