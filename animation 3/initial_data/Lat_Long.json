@@ -3,15 +3,9 @@
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
                                                                                 
 "features": [
-{ "type": "Feature", "properties": { "id": 3, "Nombre": "RMN Verde" }, "geometry": { "type": "Point", "coordinates": [ -58.655047663089064, -34.398043133263755 ] } },
-{ "type": "Feature", "properties": { "id": 2, "Nombre": "RMN Pu" }, "geometry": { "type": "Point", "coordinates": [ -58.610343841400805, -34.365577212871003 ] } },
-{ "type": "Feature", "properties": { "id": 1, "Nombre": "RMN Pr" }, "geometry": { "type": "Point", "coordinates": [ -58.562063713977572, -34.353772489488485 ] } },
-{ "type": "Feature", "properties": { "id": 3, "Nombre": "AMBA Verde" }, "geometry": { "type": "Point", "coordinates": [ -58.837439255576975, -34.673500293131475 ] } },
-{ "type": "Feature", "properties": { "id": 2, "Nombre": "AMBA Pu" }, "geometry": { "type": "Point", "coordinates": [ -58.876778618662598, -34.639669820778977 ] } },
-{ "type": "Feature", "properties": { "id": 1, "Nombre": "AMBA Pr" }, "geometry": { "type": "Point", "coordinates": [ -58.907177217410599, -34.610240796169037 ] } },
+{ "type": "Feature", "properties": { "id": 3, "Nombre": "RMN" }, "geometry": { "type": "Point", "coordinates": [ -58.655047663089064, -34.398043133263755 ] } },
+{ "type": "Feature", "properties": { "id": 3, "Nombre": "AMBA" }, "geometry": { "type": "Point", "coordinates": [ -58.837439255576975, -34.673500293131475 ] } },
 { "type": "Feature", "properties": { "id": 1, "Nombre": "CENTRO" }, "geometry": { "type": "Point", "coordinates": [ -58.540605879567202, -34.475471136802192 ] } },
-{ "type": "Feature", "properties": { "id": 3, "Nombre": "CABA Verde" }, "geometry": { "type": "Point", "coordinates": [ -58.460586038745291, -34.607665259963362 ] } },
-{ "type": "Feature", "properties": { "id": 2, "Nombre": "CABA Pu" }, "geometry": { "type": "Point", "coordinates": [ -58.437340051467409, -34.592578372184263 ] } },
-{ "type": "Feature", "properties": { "id": 1, "Nombre": "CABA Pr" }, "geometry": { "type": "Point", "coordinates": [ -58.413647025972665, -34.578961023590431 ] } }
+{ "type": "Feature", "properties": { "id": 3, "Nombre": "CABA" }, "geometry": { "type": "Point", "coordinates": [ -58.460586038745291, -34.607665259963362 ] } }
 ]
 }

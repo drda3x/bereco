@@ -315,9 +315,10 @@
                         return ctroid;
                     })
                     .attr("r", function (d) {
-                        var diff = d.properties.emigData.coming - d.properties.emigData.going,
-                        r = circleSize(Math.sqrt(Math.abs(diff) / Math.PI)) * 3;
-                        return (r < 2) ? r*5 : r;
+//                        /*var diff = d.properties.emigData.coming - d.properties.emigData.going,
+//                        r = circleSize(Math.sqrt(Math.abs(diff) / Math.PI)) * 3;
+//                        return (r < 2) ? r*5 : r;*/
+                        return 10;
                     })
                     .attr("class", "circ")
                     .attr("id", function (d) {
