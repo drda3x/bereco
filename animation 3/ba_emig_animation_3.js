@@ -67,9 +67,9 @@
                             "<b>" + data.properties.Nombre + "</b>" +
                         "</div>" +
                         "<div id='tipKey'>" +
-                            "Bicis recibidas: <b>" + formatC(data.properties.emigData.coming) + "</b><br>" +
-                            "Bicis entregadas: <b>" + formatC(data.properties.emigData.going) + "</b><br>" +
-                            "Diferencia: <b>" + formatC((data.properties.emigData.coming - data.properties.emigData.going)) + "</b>" +
+                            "Bicis recibidas: <b>" + formatC(data.properties.tooltipValues.Verde.coming) + "</b><br>" +
+                            "Bicis entregadas: <b>" + formatC(data.properties.tooltipValues.Verde.going) + "</b><br>" +
+                            "Diferencia: <b>" + formatC((data.properties.tooltipValues.Verde.coming - data.properties.tooltipValues.Verde.going)) + "</b>" +
                         "</div>" +
                         "<div class='tipClear'></div> </div>"
                 );
@@ -256,11 +256,11 @@
             this.name = name;
         }
 
-        function VehicleValueStructure(area, type, input, output) {
+        function VehicleValueStructure(area, type, coming, going) {
             this.area = area;
             this.type = type;
-            this.in = input;
-            this.out = output;
+            this.coming = coming;
+            this.going = going;
         }
 
         d3.csv('initial_data/Coming_Going.csv', function (csvData) {
@@ -268,6 +268,8 @@
                 totalInn = 0,
                 totalOut = 0,
                 strct;
+
+            var centro = {};
 
             for(var key in data) {
                 var arr = data[key].split(','),
@@ -278,26 +280,40 @@
                 area = area.join('');
 
                 if(arr.length > 1) {
+
+                    if(!centro.hasOwnProperty(type)) {
+                        centro[type] = {
+                            coming: 0,
+                            going: 0
+                        }
+                    }
+
                     strct = new VehicleValueStructure(area, type, parseInt(arr[0]), parseInt(arr[1]));
                     going.push(strct);
                     goingHash[key] = strct;
-                    totalInn += strct.coming;
-                    totalOut += strct.going;
+                    centro[type].coming += strct.coming;
+                    centro[type].going += strct.going;
                 }
             }
 
-            strct = new GoingHashStructure(totalInn, totalOut, 'CENTRO');
-            going.push(strct);
-            goingHash.CENTRO = strct;
+            for(var key in centro) {
+                strct = new VehicleValueStructure('CENTRO', key, centro[key].coming, centro[key].going);
+                going.push(strct);
+            }
 
             strct = null;
 
             d3.json("initial_data/Lat_Long.json", function (data) {
                 for(var i= 0, j= data.features.length; i<j; i++) {
-                    data.features[i].properties.emigData = goingHash[data.features[i].properties.Nombre];
-
-                    if(data.features[i].properties.Nombre == goingHash.CENTRO.name) {
-                        centro = data.features[i];
+                    data.features[i].properties.tooltipValues = {};
+                    for(var k= 0, m= going.length; k<m; k++) {
+                        var current = going[k];
+                        if(current.area == data.features[i].properties.Nombre) {
+                            data.features[i].properties.tooltipValues[current.type] = {
+                                coming: current.coming,
+                                going: current.going
+                            } ;
+                        }
                     }
                 }
 
@@ -325,13 +341,13 @@
                         return getElementId(d.properties.Nombre);
                     })
                     .attr("fill", function (d) {
-                        var diff = d.properties.emigData.coming - d.properties.emigData.going;
+                        /*var diff = d.properties.emigData.coming - d.properties.emigData.going;
                         if (diff > 0) {
                             return interfaceColors.bright;
                         } else {
                             return interfaceColors.dark;
-                        }
-
+                        }*/
+                        return interfaceColors.bright;
                     })
                     .attr("fill-opacity", "0.5")
                     .attr("stroke", "#fff")
