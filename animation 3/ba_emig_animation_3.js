@@ -61,16 +61,33 @@
             var x = ((mx < 120) ? 120 : mx),
                 y = ((my < 40) ? 40 : my);
 
-            return tooltip.style("top", y + -140 + "px").style("left", x - 120 + "px")
-                .html("<div id='tipContainer' class='small'>" +
+            return tooltip.style("top", y -140 + "px").style("left", x - 120 + "px")
+                .html("<div id='tipContainer' class='small'>" +                                               //data.properties.tooltipValues
                         "<div id='tipLocation'>" +
                             "<b>" + data.properties.Nombre + "</b>" +
                         "</div>" +
-                        "<div id='tipKey'>" +
-                            "Bicis recibidas: <b>" + formatC(data.properties.tooltipValues.Verde.coming) + "</b><br>" +
-                            "Bicis entregadas: <b>" + formatC(data.properties.tooltipValues.Verde.going) + "</b><br>" +
-                            "Diferencia: <b>" + formatC((data.properties.tooltipValues.Verde.coming - data.properties.tooltipValues.Verde.going)) + "</b>" +
-                        "</div>" +
+                        "<table id='tipKey'>" +
+                            "<tr>" +
+                                "<td></td>" +
+                                "<td>in</td>" +
+                                "<td>out</td>"+
+                            "</tr>"+
+                            "<tr>" +
+                                "<td>Verde</td>" +
+                                "<td>"+data.properties.tooltipValues.Verde.coming+"</td>" +
+                                "<td>"+data.properties.tooltipValues.Verde.going+"</td>"+
+                            "</tr>"+
+                            "<tr>" +
+                                "<td>Pu</td>" +
+                                "<td>"+data.properties.tooltipValues.Pu.coming+"</td>" +
+                                "<td>"+data.properties.tooltipValues.Pu.going+"</td>"+
+                            "</tr>"+
+                            "<tr>" +
+                                "<td>Pr</td>" +
+                                "<td>"+data.properties.tooltipValues.Pr.coming+"</td>" +
+                                "<td>"+data.properties.tooltipValues.Pr.going+"</td>"+
+                            "</tr>"+
+                        "</table>" +
                         "<div class='tipClear'></div> </div>"
                 );
         };
