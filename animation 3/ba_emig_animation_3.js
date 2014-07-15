@@ -61,7 +61,7 @@
             var x = ((mx < 120) ? 120 : mx),
                 y = ((my < 40) ? 40 : my);
 
-            return tooltip.style("top", y -140 + "px").style("left", x - 120 + "px")
+            return tooltip.style("top", y - 170 + "px").style("left", x - 120 + "px")
                 .html("<div id='tipContainer' class='small'>" +                                               //data.properties.tooltipValues
                         "<div id='tipLocation'>" +
                             "<b>" + data.properties.Nombre + "</b>" +
@@ -69,8 +69,8 @@
                         "<table id='tipKey'>" +
                             "<tr>" +
                                 "<td></td>" +
-                                "<td>in</td>" +
-                                "<td>out</td>"+
+                                "<td>a</td>" +
+                                "<td>de</td>"+
                             "</tr>"+
                             "<tr>" +
                                 "<td>Verde</td>" +
@@ -108,21 +108,20 @@
             return tooltip2.style("visibility", "hidden");
         };
 
-        function toolMove2(mx, my, home, end, v1, v2) {
+        function toolMove2(mx, my, home, end, v1, v2, type) {
             var diff = v1 - v2,
                 x = ((mx < 120) ? 120 : mx),
                 y = ((my < 40) ? 40 : my);
 
             return tooltip2.style("top", my + -140 + "px")
                            .style("left", mx - 120 + "px")
-                           .html("<div id='tipContainer' class='large'>" +
+                           .html("<div id='tipContainer' class='small'>" +
                                     "<div id='tipLocation'>" +
-                                        "<b>" + home + "/" + end + "</b>" +
+                                        "<b>" + home + "/" + end + " " + type + "</b>" +
                                     "</div>" +
-                                    "<div id='tipKey'>Viajes, " + home + " a " + end + ": " +
-                                        "<b>" + formatC(v2) + "</b><br>" +
-                                        "Viajes, " + end + " a " + home + ": <b>" + formatC(v1) + "</b><br>" +
-                                        "Diferencia, " + home + ": <b>" + formatD(v1 - v2) + "</b>" +
+                                    "<div id='tipKey'>" +
+                                        "a Centro: " + formatC(v1) + "<br>" +
+                                        "de Centro: " + formatC(v2) +
                                     "</div>" +
                                     "<div class='tipClear'></div> " +
                                  "</div>"
@@ -137,8 +136,10 @@
         // Circle event handler
         function clicked(selected) {
             var selname = selected.id;
-            var homex = path.centroid(centro)[0];
-            var homey = path.centroid(centro)[1];
+
+            var centro = d3.select('#CENTRO')[0][0].__data__,
+                homex = path.centroid(centro)[0],
+                homey = path.centroid(centro)[1];
 
             g.selectAll(".goingline")
                 .attr("stroke-dasharray", 0)
@@ -149,23 +150,29 @@
                 .enter().append("path")
                 .attr("class", "goingline")
                 .attr("d", function(d) {
-                    var t = selected;
-                    var htmiId = getElementId(d.name);
-                    var finalval = d.coming - d.going;
-                    var theState = d3.select('#' + htmiId);
+                    var t = selected,
+                        htmlId = getElementId(d.area),
+                        finalval = d.coming - d.going,
+                        theState = d3.select('#' + htmlId)[0][0].__data__;
+
+                    var curveCoeffs = {
+                        Verde: {x: 2.2, y: 2.5},
+                        Pu: {x: 1.7, y: 2.3},
+                        Pr: {x: 2.3, y: 2.2}
+                    };
 
                     if(!isNaN(finalval)) {
-                        var startx = path.centroid(theState[0][0].__data__)[0];
-                        var starty = path.centroid(theState[0][0].__data__)[1];
+                        var startx = path.centroid(theState)[0];
+                        var starty = path.centroid(theState)[1];
 
-                        if (d.name != centro.properties.Nombre) {
-                            return "M" + homex + "," + homey + " Q" + (startx + homex) / 2 + " " + (starty + homey) / 2.5 + " " + startx + " " + starty;
+                        if (d.area != centro.properties.Nombre) {
+                            return "M" + homex + "," + homey + " Q" + (startx + homex) / curveCoeffs[d.type].x + " " + (starty + homey) / curveCoeffs[d.type].y + " " + startx + " " + starty;
                         }
                     }
                 })
                 .call(transition)
                 .attr("stroke-width", function(d,i) {
-                    var finalval = d.coming - d.going,
+                    /*var finalval = d.coming - d.going,
                         l = lineSize(parseFloat(Math.abs(finalval)));
 
                     if(l > 15) {
@@ -174,7 +181,8 @@
                         return l / 2;
                     } else {
                         return l * 1.5;
-                    }
+                    }*/
+                    return 5;
                 })
                 .attr("stroke", function(d,i) {
                     var finalval = d.coming - d.going;
@@ -195,7 +203,7 @@
                     var m = d3.mouse(this),
                         mx = m[0],
                         my = m[1];
-                    return toolMove2(mx, my, 'CENTRO', d.name, d.coming, d.going);
+                    return toolMove2(mx, my, 'CENTRO', d.area, d.coming, d.going, d.type);
                 })
                 .on("mouseout", function (d) {
                     return toolOut2(d, this);

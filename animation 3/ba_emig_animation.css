@@ -47,7 +47,10 @@
     margin: 0px;
     padding: 5px 0px 5px 10px;
     border-top: 1px solid #ffffff;
-    background: rgba(216, 216, 216, 0.5);
+    background: rgba(216, 216, 216, 0.6);
+}
+
+#tipContainer table {
     width: inherit;
 }
 
