@@ -5,7 +5,7 @@
 "features": [
 { "type": "Feature", "properties": { "id": 3, "Nombre": "RMN" }, "geometry": { "type": "Point", "coordinates": [ -58.655047663089064, -34.398043133263755 ] } },
 { "type": "Feature", "properties": { "id": 3, "Nombre": "AMBA" }, "geometry": { "type": "Point", "coordinates": [ -58.837439255576975, -34.673500293131475 ] } },
-{ "type": "Feature", "properties": { "id": 1, "Nombre": "CENTRO" }, "geometry": { "type": "Point", "coordinates": [ -58.540605879567202, -34.475471136802192 ] } },
+{ "type": "Feature", "properties": { "id": 1, "Nombre": "TOTAL" }, "geometry": { "type": "Point", "coordinates": [ -58.540605879567202, -34.475471136802192 ] } },
 { "type": "Feature", "properties": { "id": 3, "Nombre": "CABA" }, "geometry": { "type": "Point", "coordinates": [ -58.460586038745291, -34.607665259963362 ] } }
 ]
 }

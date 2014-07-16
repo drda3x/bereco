@@ -22,6 +22,7 @@
     background: #5A5A5A;
     border-top: 1px solid #D8D8D8;
     border-left: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
 }
 
 .large {
@@ -46,7 +47,7 @@
     color: #333;
     margin: 0px;
     padding: 5px 0px 5px 10px;
-    border-top: 1px solid #ffffff;
+    /*border-top: 1px solid #ffffff;*/
     background: rgba(216, 216, 216, 0.6);
 }
 
