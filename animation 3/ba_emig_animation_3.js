@@ -96,9 +96,6 @@
             return tooltip2.style("top", my + -40 + "px")
                            .style("left", mx - 20 + "px")
                            .html("<div id='tipContainer' class='small line'>" +
-                                    /*"<div id='tipLocation'>" +
-                                        "<b>" + type + "</b>" +
-                                    "</div>" +*/
                                     "<div id='tipKey'>" +
                                         "<span>" + type + ": " + Math.round(val) + " trips</span>" +
                                     "</div>" +
@@ -147,7 +144,13 @@
                     }
                 })
                 .call(transition)
-                .attr("stroke-width", 5)
+                .attr("stroke-width", function(d) {
+                    var width = (d.val * 2) / 70000;
+                    if(d.val < 70000) {
+                        return width * 15;
+                    }
+                    return width;
+                })
                 .attr("stroke", function(d) {
                     switch(d.type) {
                         case 'Verde':
@@ -260,7 +263,7 @@
                 strct;
 
             for(var key in data) {
-                var val = parseFloat(data[key].replace(',','.')),
+                var val = parseFloat(data[key].replace(',','')),
                     arr = data[key].split(','),
                     area = key.split(' '),
                     type = area[area.length - 1];
@@ -307,22 +310,13 @@
                         return ctroid;
                     })
                     .attr("r", function (d) {
-//                        /*var diff = d.properties.emigData.coming - d.properties.emigData.going,
-//                        r = circleSize(Math.sqrt(Math.abs(diff) / Math.PI)) * 3;
-//                        return (r < 2) ? r*5 : r;*/
-                        return 10;
+                        return circleSize(Math.sqrt(d.properties.tooltipValue / Math.PI / 20));
                     })
                     .attr("class", "circ")
                     .attr("id", function (d) {
                         return getElementId(d.properties.Nombre);
                     })
                     .attr("fill", function (d) {
-                        /*var diff = d.properties.emigData.coming - d.properties.emigData.going;
-                        if (diff > 0) {
-                            return interfaceColors.bright;
-                        } else {
-                            return interfaceColors.dark;
-                        }*/
                         return interfaceColors.bright;
                     })
                     .attr("fill-opacity", "0.5")
