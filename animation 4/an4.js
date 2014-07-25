@@ -14,7 +14,7 @@
             },
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        map.data.loadGeoJson('/bereco/animation 4/casos.json');
+        map.data.loadGeoJson(getUrl('casos.json'));
         map.data.setStyle(function(feature){
             var prop = feature.getProperty('riesgoTotal'),
                 icon;
@@ -30,9 +30,13 @@
             }
 
             return {
-                icon: '/bereco/animation 4/'+ icon +'.png'
+                icon: getUrl(icon) +'.png'
             }
         });
+    }
+
+    function getUrl(fileName) {
+        return global.location.pathname.replace(/\w*.\w*$/,'') + fileName
     }
 
     if(!global.animationApi) {
