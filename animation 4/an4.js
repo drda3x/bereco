@@ -2,7 +2,7 @@
  * <<Описание файла>>
  */
 
-(function (global, google, document, InfoBox) {
+(function (global, google, document, InfoBox, navigator) {
     'use strict';
 
     function Feature() {
@@ -121,7 +121,18 @@
             });
             popup.open(map);
         });
+        getUserLocation(map);
+    }
 
+    function getUserLocation(map) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude,
+                lon = position.coords.longitude,
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: new google.maps.LatLng(lat, lon)
+                })
+        });
     }
 
     function getUrl(fileName) {
@@ -134,4 +145,4 @@
 
     global.animationApi.initializeMap = initMap;
 
-})(this, google, document, InfoBox);
+})(this, google, document, InfoBox, navigator);
