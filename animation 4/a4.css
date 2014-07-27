@@ -13,6 +13,14 @@ body {
 }
 
 #popup {
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 170px;
+}
+
+#popupContent td {
+    border-bottom: 1px solid #5A5A5A;
+}
+
+#popupContent .values {
+    padding: 3px 10px;
 }

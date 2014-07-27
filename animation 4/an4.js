@@ -10,13 +10,22 @@
     }
 
     Feature.prototype.getPopupContent = function() {
-        var mainProp = this.data.getProperty('tipo'),
+        var self = this,
+            mainProp = self.data.getProperty('tipo'),
             type = popupTypes[mainProp],
-            contentStr = '';
+            contentStr = '<table id="popupContent" cellpadding="0" cellspacing="0">';
 
         for(var i= 0, j=type.length; i<j; i++) {
-            contentStr += '<div>'+ type[i] +': '+ this.getScaledParam('wrd', type[i]) +'</div>'
+            contentStr += '<tr><td>'+ popupTypeInfo[type[i]] +'</td><td class="values">'+ (function(data) {
+                if (data == 'edad') {
+                    return self.data.getProperty(data);
+                } else {
+                    return self.getScaledParam('wrd', data);
+                }
+            })(type[i])  +'</td></tr>'
         }
+
+        contentStr += '</table>';
 
         return '<div id="popup"><div> Riesgo '+ this.getScaledParam('wrd', 'riesgoTotal') +'</div>'+ contentStr +'</div>';
     };
@@ -29,27 +38,29 @@
                 },
                 p_middle: {
                     img: 'icon-orange',
-                    wrd: 'p_middle'
+                    wrd: 'medio alto'
                 },
                 m_middle: {
                     img: 'icon-yellow',
-                    wrd: 'm_middle'
+                    wrd: 'mediano'
                 },
                 lower: {
                     img: 'icon-white',
-                    wrd: 'none'
+                    wrd: 'bajo'
                 }
             },
             prop = this.data.getProperty(param);
 
-        if(prop == 0 || prop == null) {
+        if(prop == 0) {
             return params.lower[type];
         } else if(prop < 5 ) {
             return params.m_middle[type];
         } else if(prop < 8) {
             return params.p_middle[type];
-        } else {
+        } else if(prop > 8){
             return params.height[type];
+        } else {
+            return null;
         }
     };
 
@@ -62,9 +73,19 @@
         content: 'test'
         }),
         popupTypes = {
-            persona: ['riesgoGeografico','edad', 'salud', 'movilidad','riesgoPropio','riesgoTotal'],
-            casa: ['riesgoGeografico', 'plantaBaja','riesgoPropio','riesgoTotal'],
-            auto: ['riesgoGeografico', 'bajoTierra','riesgoPropio','riesgoTotal']
+            persona: ['riesgoGeografico', 'edad', 'salud', 'movilidad', 'riesgoPropio', 'riesgoTotal'],
+            casa: ['riesgoGeografico', 'plantaBaja', 'riesgoPropio', 'riesgoTotal'],
+            auto: ['riesgoGeografico', 'bajoTierra', 'riesgoPropio', 'riesgoTotal']
+        },
+        popupTypeInfo = {
+            riesgoGeografico: 'Riesgo geografico',
+            edad: 'Edad',
+            salud: 'Salud',
+            movilidad: 'Movilidad',
+            riesgoPropio: 'Riesgo propio',
+            riesgoTotal: 'Riesgo total',
+            plantaBaja: 'Planta baja',
+            bajoTierra: 'Bajo tierra'
         };
 
     // Function for getting initialize map
