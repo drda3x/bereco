@@ -5,29 +5,23 @@
 (function (global, google, document) {
     'use strict';
 
-    function getPopupHtml(content) {
-        var bodyStr = '';
-
-        for(var i= 0, j= content.body.length; i<j; i++) {
-            bodyStr += '<div>'+ content.body[i].name +': '+ content.body[i].value +'</div>';
-        }
-
-        return '<div id="popup"><div>'+ content.header +'</div>'+ bodyStr +'</div>';
+    function Feature() {
+        this.data = null;
     }
 
-    function getPopupContent(feature) {
-        var mainProp = feature.getProperty('tipo'),
+    Feature.prototype.getPopupContent = function() {
+        var mainProp = this.data.getProperty('tipo'),
             type = popupTypes[mainProp],
             contentStr = '';
 
         for(var i= 0, j=type.length; i<j; i++) {
-            contentStr += '<div>'+ type[i] +': '+ feature.getProperty(type[i]) +'</div>'
+            contentStr += '<div>'+ type[i] +': '+ this.getScaledParam('wrd', type[i]) +'</div>'
         }
 
-        return '<div id="popup"><div>'+ mainProp +'</div>'+ contentStr +'</div>';
-    }
+        return '<div id="popup"><div> Riesgo '+ this.getScaledParam('wrd', 'riesgoTotal') +'</div>'+ contentStr +'</div>';
+    };
 
-    function getScaledParam(feature, type) {
+    Feature.prototype.getScaledParam = function(type, param) {
         var params = {
                 height: {
                     img: 'icon-red',
@@ -43,12 +37,12 @@
                 },
                 lower: {
                     img: 'icon-white',
-                    wrd: 'lower'
+                    wrd: 'none'
                 }
             },
-            prop = feature.getProperty('riesgoTotal');
+            prop = this.data.getProperty(param);
 
-        if(prop == 0) {
+        if(prop == 0 || prop == null) {
             return params.lower[type];
         } else if(prop < 5 ) {
             return params.m_middle[type];
@@ -57,9 +51,14 @@
         } else {
             return params.height[type];
         }
-    }
+    };
 
-    var popup = new google.maps.InfoWindow({
+    Feature.prototype.getLatLng = function() {
+        return this.data.getGeometry().get();
+    };
+
+    var f = new Feature(),
+        popup = new google.maps.InfoWindow({
         content: 'test'
         }),
         popupTypes = {
@@ -80,15 +79,16 @@
 
         map.data.loadGeoJson(getUrl('casos.json'));
         map.data.setStyle(function(feature){
+            f.data = feature;
             return {
-                icon: getUrl(getScaledParam(feature, 'img')) +'.png'
+                icon: getUrl(f.getScaledParam('img', 'riesgoTotal')) +'.png'
             }
         });
 
         map.data.addListener('click', function(event) {
-            var feature = event.feature;
-            popup.setPosition(feature.getGeometry().get());
-            popup.setContent(getPopupContent(feature));
+            f.data = event.feature;
+            popup.setPosition(f.getLatLng());
+            popup.setContent(f.getPopupContent());
             popup.open(map);
         });
 
