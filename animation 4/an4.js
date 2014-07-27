@@ -2,7 +2,7 @@
  * <<Описание файла>>
  */
 
-(function (global, google, document) {
+(function (global, google, document, InfoBox) {
     'use strict';
 
     function Feature() {
@@ -27,7 +27,8 @@
 
         contentStr += '</table>';
 
-        return '<div id="popup"><div> Riesgo '+ this.getScaledParam('wrd', 'riesgoTotal') +'</div>'+ contentStr +'</div>';
+        return '<div id="popup"><div class="header"> Riesgo '+ this.getScaledParam('wrd', 'riesgoTotal') +'</div>'+ contentStr + '</div>' +
+               '<div id="popupArrow"></div>' ;
     };
 
     Feature.prototype.getScaledParam = function(type, param) {
@@ -69,9 +70,7 @@
     };
 
     var f = new Feature(),
-        popup = new google.maps.InfoWindow({
-        content: 'test'
-        }),
+        popup = new InfoBox(),
         popupTypes = {
             persona: ['riesgoGeografico', 'edad', 'salud', 'movilidad', 'riesgoPropio', 'riesgoTotal'],
             casa: ['riesgoGeografico', 'plantaBaja', 'riesgoPropio', 'riesgoTotal'],
@@ -110,6 +109,17 @@
             f.data = event.feature;
             popup.setPosition(f.getLatLng());
             popup.setContent(f.getPopupContent());
+            popup.setOptions({
+                //pixelOffset: new google.maps.Size(-105, -240)
+                pixelOffset: (function(f){
+                    var n = f.getProperty('tipo');
+                    if(n == 'persona') {
+                        return new google.maps.Size(-105, -240);
+                    } else {
+                        return new google.maps.Size(-105, -183);
+                    }
+                })(f.data)
+            });
             popup.open(map);
         });
 
@@ -125,4 +135,4 @@
 
     global.animationApi.initializeMap = initMap;
 
-})(this, google, document);
+})(this, google, document, InfoBox);

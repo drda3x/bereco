@@ -1,26 +1,56 @@
 html {
-    height: 100%
+    height: 100%;
 }
 
 body {
     height: 100%;
-    margin: 0;
-    padding: 0
+    margin: 0px;
+    padding: 0px;
 }
 
 #map {
-    height: 100%
+    height: 100%;
 }
 
 #popup {
+    background: none repeat scroll 0% 0% rgba(216, 216, 216, 0.9);
+    color: #333333;
+    font-size: 9pt;
+    max-height: 213px;
     width: 210px;
-    height: 170px;
+    min-height: 156px;
+}
+
+#popupContent {
+    padding: 3px 10px;
 }
 
 #popupContent td {
-    border-bottom: 1px solid #5A5A5A;
+    border-bottom: 1px solid #5a5a5a;
+    padding: 5px 6px;
 }
 
 #popupContent .values {
-    padding: 3px 10px;
+    padding: 5px 10px;
+}
+
+#popup .header {
+    background: none repeat scroll 0% 0% #5a5a5a;
+    border-bottom: 1px solid #ffffff;
+    border-left: 1px solid rgba(216, 216, 216, 0.9);
+    border-top: 1px solid rgba(216, 216, 216, 0.9);
+    color: #ffffff;
+    font-size: 14pt;
+    font-weight: bold;
+    padding: 5px 14px;
+}
+
+#popupArrow {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 19px solid #5a5a5a;
+    height: 0px;
+    width: 0px;
+    position: relative;
+    left: 97px;
 }
