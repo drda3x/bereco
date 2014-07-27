@@ -34,19 +34,19 @@
     Feature.prototype.getScaledParam = function(type, param) {
         var params = {
                 height: {
-                    img: 'icon-red',
+                    img: 'img/icon-red',
                     wrd: 'alto'
                 },
                 p_middle: {
-                    img: 'icon-orange',
+                    img: 'img/icon-orange',
                     wrd: 'medio alto'
                 },
                 m_middle: {
-                    img: 'icon-yellow',
+                    img: 'img/icon-yellow',
                     wrd: 'mediano'
                 },
                 lower: {
-                    img: 'icon-white',
+                    img: 'img/icon-white',
                     wrd: 'bajo'
                 }
             },
@@ -97,7 +97,7 @@
             },
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        map.data.loadGeoJson(getUrl('casos.json'));
+        map.data.loadGeoJson(getUrl('initial_data/casos.json'));
         map.data.setStyle(function(feature){
             f.data = feature;
             return {
@@ -110,11 +110,10 @@
             popup.setPosition(f.getLatLng());
             popup.setContent(f.getPopupContent());
             popup.setOptions({
-                //pixelOffset: new google.maps.Size(-105, -240)
                 pixelOffset: (function(f){
                     var n = f.getProperty('tipo');
                     if(n == 'persona') {
-                        return new google.maps.Size(-105, -240);
+                        return new google.maps.Size(-105, -233);
                     } else {
                         return new google.maps.Size(-105, -183);
                     }
