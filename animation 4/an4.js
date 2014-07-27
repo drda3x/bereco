@@ -16,14 +16,47 @@
     }
 
     function getPopupContent(feature) {
-        var type = popupTypes[feature.getProperty('tipo')],
+        var mainProp = feature.getProperty('tipo'),
+            type = popupTypes[mainProp],
             contentStr = '';
 
         for(var i= 0, j=type.length; i<j; i++) {
             contentStr += '<div>'+ type[i] +': '+ feature.getProperty(type[i]) +'</div>'
         }
 
-        return contentStr;
+        return '<div id="popup"><div>'+ mainProp +'</div>'+ contentStr +'</div>';
+    }
+
+    function getScaledParam(feature, type) {
+        var params = {
+                height: {
+                    img: 'icon-red',
+                    wrd: 'alto'
+                },
+                p_middle: {
+                    img: 'icon-orange',
+                    wrd: 'p_middle'
+                },
+                m_middle: {
+                    img: 'icon-yellow',
+                    wrd: 'm_middle'
+                },
+                lower: {
+                    img: 'icon-white',
+                    wrd: 'lower'
+                }
+            },
+            prop = feature.getProperty('riesgoTotal');
+
+        if(prop == 0) {
+            return params.lower[type];
+        } else if(prop < 5 ) {
+            return params.m_middle[type];
+        } else if(prop < 8) {
+            return params.p_middle[type];
+        } else {
+            return params.height[type];
+        }
     }
 
     var popup = new google.maps.InfoWindow({
@@ -47,21 +80,8 @@
 
         map.data.loadGeoJson(getUrl('casos.json'));
         map.data.setStyle(function(feature){
-            var prop = feature.getProperty('riesgoTotal'),
-                icon;
-
-            if(prop == 0) {
-                icon = 'icon-white'
-            } else if(prop < 5 ) {
-                icon = 'icon-yellow'
-            } else if(prop < 8) {
-                icon = 'icon-orange'
-            } else {
-                icon = 'icon-red'
-            }
-
             return {
-                icon: getUrl(icon) +'.png'
+                icon: getUrl(getScaledParam(feature, 'img')) +'.png'
             }
         });
 
