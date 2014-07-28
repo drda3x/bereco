@@ -16,9 +16,9 @@ body {
     background: none repeat scroll 0% 0% rgba(216, 216, 216, 0.9);
     color: #333333;
     font-size: 9pt;
-    max-height: 213px;
+    max-height: 250px;
     width: 210px;
-    min-height: 156px;
+    min-height: 170px;
 }
 
 #popupContent {

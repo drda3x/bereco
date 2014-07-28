@@ -17,7 +17,7 @@
 
         for(var i= 0, j=type.length; i<j; i++) {
             contentStr += '<tr><td>'+ popupTypeInfo[type[i]] +'</td><td class="values">'+ (function(data) {
-                if (data == 'edad') {
+                if (data == 'edad' || data == 'tipo') {
                     return self.data.getProperty(data);
                 } else {
                     return self.getScaledParam('wrd', data);
@@ -51,17 +51,24 @@
                 }
             },
             prop = this.data.getProperty(param);
-
-        if(prop == 0) {
-            return params.lower[type];
-        } else if(prop < 5 ) {
-            return params.m_middle[type];
-        } else if(prop < 8) {
-            return params.p_middle[type];
-        } else if(prop > 8){
-            return params.height[type];
+        if(param == 'plantaBaja' || param == 'bajoTierra') {
+            if(prop == null) {
+                return 'Si';
+            } else {
+                return 'No';
+            }
         } else {
-            return null;
+            if(prop == 0) {
+                return params.lower[type];
+            } else if(prop < 5 ) {
+                return params.m_middle[type];
+            } else if(prop < 8) {
+                return params.p_middle[type];
+            } else if(prop > 8){
+                return params.height[type];
+            } else {
+                return null;
+            }
         }
     };
 
@@ -72,11 +79,12 @@
     var f = new Feature(),
         popup = new InfoBox(),
         popupTypes = {
-            persona: ['riesgoGeografico', 'edad', 'salud', 'movilidad', 'riesgoPropio', 'riesgoTotal'],
-            casa: ['riesgoGeografico', 'plantaBaja', 'riesgoPropio', 'riesgoTotal'],
-            auto: ['riesgoGeografico', 'bajoTierra', 'riesgoPropio', 'riesgoTotal']
+            persona: ['tipo', 'riesgoGeografico', 'edad', 'salud', 'movilidad', 'riesgoPropio', 'riesgoTotal'],
+            casa: ['tipo','riesgoGeografico', 'plantaBaja', 'riesgoPropio', 'riesgoTotal'],
+            auto: ['tipo','riesgoGeografico', 'bajoTierra', 'riesgoPropio', 'riesgoTotal']
         },
         popupTypeInfo = {
+            tipo: 'Tipo',
             riesgoGeografico: 'Riesgo geografico',
             edad: 'Edad',
             salud: 'Salud',
@@ -113,9 +121,9 @@
                 pixelOffset: (function(f){
                     var n = f.getProperty('tipo');
                     if(n == 'persona') {
-                        return new google.maps.Size(-105, -233);
+                        return new google.maps.Size(-105, -260);
                     } else {
-                        return new google.maps.Size(-105, -183);
+                        return new google.maps.Size(-105, -205);
                     }
                 })(f.data)
             });
