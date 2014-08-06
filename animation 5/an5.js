@@ -31,45 +31,8 @@
                '<div id="popupArrow"></div>' ;
     };
 
-    Feature.prototype.getScaledParam = function(type, param) {
-        var params = {
-                height: {
-                    img: 'img/icon-red',
-                    wrd: 'alto'
-                },
-                p_middle: {
-                    img: 'img/icon-orange',
-                    wrd: 'medio alto'
-                },
-                m_middle: {
-                    img: 'img/icon-yellow',
-                    wrd: 'mediano'
-                },
-                lower: {
-                    img: 'img/icon-white',
-                    wrd: 'bajo'
-                }
-            },
-            prop = this.data.getProperty(param);
-        if(param == 'plantaBaja' || param == 'bajoTierra') {
-            if(prop == null) {
-                return 'Si';
-            } else {
-                return 'No';
-            }
-        } else {
-            if(prop == 0) {
-                return params.lower[type];
-            } else if(prop < 5 ) {
-                return params.m_middle[type];
-            } else if(prop < 8) {
-                return params.p_middle[type];
-            } else if(prop > 8){
-                return params.height[type];
-            } else {
-                return null;
-            }
-        }
+    Feature.prototype.getDynamicParam = function(type, param) {
+
     };
 
     Feature.prototype.getLatLng = function() {
@@ -106,30 +69,92 @@
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
         map.data.loadGeoJson(getUrl('initial_data/minimas.json'));
-        /*map.data.setStyle(function(feature){
-            f.data = feature;
+
+        var line_colors = getColors(),
+            lc_len = line_colors.length,
+            div = 3;
+
+        createColorsLegend(line_colors);
+
+        map.data.setStyle(function(feature){
+            var t = feature.getProperty('temperature'),
+                color_position = Math.round(Math.abs(t/div));
+
+            color_position = ((color_position >= lc_len) ? lc_len-1 : color_position);
+
             return {
-                icon: getUrl(f.getScaledParam('img', 'riesgoTotal')) +'.png'
+                strokeColor: line_colors[color_position]
             }
         });
 
-        map.data.addListener('click', function(event) {
-            f.data = event.feature;
-            popup.setPosition(f.getLatLng());
-            popup.setContent(f.getPopupContent());
-            popup.setOptions({
-                pixelOffset: (function(f){
-                    var n = f.getProperty('tipo');
-                    if(n == 'persona') {
-                        return new google.maps.Size(-105, -260);
+        getUserLocation(map);
+    }
+
+    function getColors() {
+        var r = 255,
+            g = 0,
+            b = 0,
+            delta = 150,
+            current = 'red',
+            colors = [];
+
+        for(var i= 5; i>0; i--) {
+            if(current == 'red') {
+                if (g + delta < 255) {
+                    g += delta;
+                } else {
+                    current = 'green';
+                    g = 255;
+                }
+            } else if(current == 'green')  {
+                if(r - delta > 0) {
+                    r -= delta;
+                } else {
+                    r = 0;
+                    if(b + delta > 255) {
+                        current = 'blue';
+                        b = 255;
                     } else {
-                        return new google.maps.Size(-105, -205);
+                        b += delta;
                     }
-                })(f.data)
-            });
-            popup.open(map);
-        });
-        getUserLocation(map);*/
+                }
+            } else {
+                if(g - delta > 0) {
+                    g -= delta;
+                } else {
+                    g = 0;
+                    if(r + delta < 255) {
+                        r += delta;
+                    } else {
+                        current = 'red'
+                        r = 255;
+                    }
+                }
+            }
+            colors.push('#' + ((r < 16) ? 0 + r.toString(16) : r.toString(16)) + ((g < 16) ? 0 + g.toString(16) : g.toString(16)) + ((b < 16) ? 0 + b.toString(16) : b.toString(16)));
+        }
+        return colors.reverse();
+    }
+
+    // todo вообще-то тут все должно быть параметризировано))
+
+    function createColorsLegend(colors) {
+        var map = document.getElementById('map_container'),
+            legend = document.createElement('ul');
+
+        for(var i= colors.length - 1, j = 14; i>= 0; i--) {
+            var li = legend.appendChild(document.createElement('li')),
+                colored_span = li.appendChild(document.createElement('span')),
+                label = li.appendChild(document.createElement('span'));
+
+            colored_span.style.backgroundColor = colors[i];
+            colored_span.className = 'legend_colored';
+
+            label.textContent = ((j > 0) ? '+' : '') + j + ' .. ' + (((j -= 3) > 0) ? '+' : '') + j;
+            label.className = 'legend_label';
+        }
+
+        map.appendChild(legend);
     }
 
     function getUserLocation(map) {

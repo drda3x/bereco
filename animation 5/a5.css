@@ -10,6 +10,8 @@ body {
 
 #map {
     height: 100%;
+    margin: 0;
+    display: inline-block;
 }
 
 #popup {
@@ -53,4 +55,42 @@ body {
     width: 0px;
     position: relative;
     left: 97px;
+}
+
+.color_test {
+    width: 15px;
+    height: 15px;
+    margin: 5px;
+}
+
+ul {
+    display: inline-block;
+    float: right;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    height: 20px;
+    margin: 5px 0;
+
+}
+
+.legend_colored {
+    width: 35px;
+    height: 20px;
+    display: inline-block;
+    border: 1px solid #000000;
+    margin: 0 10px 0 0;
+}
+
+.legend_label {
+    position: relative;
+    top: -3px;
+}
+
+#map_container {
+    width: 1030px;
+    padding: 5px;
 }
