@@ -2,7 +2,7 @@
  * <<Описание файла>>
  */
 
-(function (global, google, document, InfoBox, navigator) {
+(function (global, google, document, navigator) {
     'use strict';
 
     function getJson(callback, context) {
@@ -70,7 +70,7 @@
                     else
                         return 0;
                 });
-            console.log(temperature_values);
+
             var tempr_max = temperature_values[temperature_values.length-1],
                 tempr_min = temperature_values[0],
                 colors = getColors(tempr_max, tempr_min),
@@ -100,7 +100,7 @@
         };
 
         var mapOptions = {
-                center: new google.maps.LatLng(-34.61106492834361,-58.4498405456543),
+                center: new google.maps.LatLng(-34.66806492834361,-58.4598405456543),
                 zoom: 12,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             },
@@ -251,4 +251,4 @@
 
     global.animationApi.initializeMap = initMap;
 
-})(this, google, document, InfoBox, navigator);
+})(this, google, document, navigator);
