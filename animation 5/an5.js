@@ -9,7 +9,7 @@
         var xhr = new XMLHttpRequest(),
             file_pth = 'initial_data/AreaMaximaInundable.json';
 
-        xhr.open('GET', global.location.href.replace(/\w*.\w*$/,'') + file_pth, true);
+        xhr.open('GET', global.location.href.replace(/(\/\w*.html)$|(\/\w*.php)$/,'/') + file_pth, true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState != 4) {
                 return;
