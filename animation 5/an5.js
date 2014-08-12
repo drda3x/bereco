@@ -2,169 +2,228 @@
  * <<Описание файла>>
  */
 
-(function (global, google, document, InfoBox, navigator) {
+(function (global, google, document, navigator) {
     'use strict';
 
-    function Feature() {
-        this.data = null;
-    }
+    function getJson(callback, context) {
+        var xhr = new XMLHttpRequest(),
+            file_pth = 'initial_data/AreaMaximaInundable.json';
 
-    Feature.prototype.getPopupContent = function() {
-        var self = this,
-            mainProp = self.data.getProperty('tipo'),
-            type = popupTypes[mainProp],
-            contentStr = '<table id="popupContent" cellpadding="0" cellspacing="0">';
+        xhr.open('GET', global.location.href.replace(/\w*.\w*$/,'') + file_pth, true);
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState != 4) {
+                return;
+            }
 
-        for(var i= 0, j=type.length; i<j; i++) {
-            contentStr += '<tr><td>'+ popupTypeInfo[type[i]] +'</td><td class="values">'+ (function(data) {
-                if (data == 'edad' || data == 'tipo') {
-                    return self.data.getProperty(data);
-                } else {
-                    return self.getScaledParam('wrd', data);
-                }
-            })(type[i])  +'</td></tr>'
-        }
-
-        contentStr += '</table>';
-
-        return '<div id="popup"><div class="header"> Riesgo '+ this.getScaledParam('wrd', 'riesgoTotal') +'</div>'+ contentStr + '</div>' +
-               '<div id="popupArrow"></div>' ;
-    };
-
-    Feature.prototype.getDynamicParam = function(type, param) {
-
-    };
-
-    Feature.prototype.getLatLng = function() {
-        return this.data.getGeometry().get();
-    };
-
-    var f = new Feature(),
-        popup = new InfoBox(),
-        popupTypes = {
-            persona: ['tipo', 'riesgoGeografico', 'edad', 'salud', 'movilidad', 'riesgoPropio', 'riesgoTotal'],
-            casa: ['tipo','riesgoGeografico', 'plantaBaja', 'riesgoPropio', 'riesgoTotal'],
-            auto: ['tipo','riesgoGeografico', 'bajoTierra', 'riesgoPropio', 'riesgoTotal']
-        },
-        popupTypeInfo = {
-            tipo: 'Tipo',
-            riesgoGeografico: 'Riesgo geografico',
-            edad: 'Edad',
-            salud: 'Salud',
-            movilidad: 'Movilidad',
-            riesgoPropio: 'Riesgo propio',
-            riesgoTotal: 'Riesgo total',
-            plantaBaja: 'Planta baja',
-            bajoTierra: 'Bajo tierra'
+            callback.apply(context, [null, xhr.responseText]);
         };
+
+        xhr.send();
+    }
 
     // Function for getting initialize map
     function initMap() {
 
+        function tryParse(err, str) {
+
+            if(err) {
+                throw err;
+            }
+
+            try {
+                var json = JSON.parse(str);
+
+                if(!json.features || !json.features instanceof Array) {
+                    throw 'Expected feature field in json and it has to be an array';
+                }
+
+                createLines(json);
+
+            } catch(e) {
+                console.log(e);
+            }
+
+        }
+
+        function createLines(data) {
+            if(!map) {
+                return;
+            }
+
+            var temperature_values = [];
+
+            for(var i= 0, j= data.features.length; i<j; i++) {
+                var feature = data.features[i],
+                    val = parseInt(feature.properties.GRIDCODE);
+
+                if(val) {
+                    temperature_values.push(val);
+                }
+            }
+
+            temperature_values = temperature_values
+                .sort(function (a, b) {
+                    if (a > b)
+                        return 1;
+                    else if (a < b)
+                        return -1;
+                    else
+                        return 0;
+                });
+
+            var tempr_max = temperature_values[temperature_values.length-1],
+                tempr_min = temperature_values[0],
+                colors = getColors(tempr_max, tempr_min),
+                colors_len = colors.length,
+                div = getDelta(tempr_max, tempr_min);
+
+            createColorsLegend(colors.reverse(), tempr_max, tempr_min);
+
+            map.data.addGeoJson(data);
+
+            map.data.setStyle(function(feature){
+                var t = feature.getProperty('GRIDCODE'),
+                    color;
+
+                for(i= 0, j= colors.length; i<j; i++) {
+                    if(colors[i].min <= t && t <= colors[i].max) {
+                        color = colors[i].color;
+                        break;
+                    }
+                }
+
+                return {
+                    strokeColor: color,
+                    fillColor: color
+                }
+            });
+        };
+
         var mapOptions = {
-                center: new google.maps.LatLng(-34.61106492834361,-58.4498405456543),
+                center: new google.maps.LatLng(-34.66806492834361,-58.4598405456543),
                 zoom: 12,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             },
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        map.data.loadGeoJson(getUrl('initial_data/maximas.json'));
-
-        var temperature_borders = {
-            max: 0,
-            min: 1000000
-        };
-        map.data.forEach(function(feature) {
-            var t = feature.getProperty('temperature');
-            console.log('aaaa');
-            temperature_borders.max = ((t > temperature_borders.max) ? t : temperature_borders.max);
-            temperature_borders.min = ((t < temperature_borders.min) ? t : temperature_borders.min);
-
-        });
-
-        console.log(map.data.hasOwnProperty('forEach'));
-        console.log(map.data.hasOwnProperty('loadGeoJson'));
-/*        var line_colors = getColors(temperature_borders.min, temperature_borders.max),
-            lc_len = line_colors.length,
-            div = 3;
-
-        createColorsLegend(line_colors);
-
-        map.data.setStyle(function(feature){
-            var t = feature.getProperty('temperature'),
-                color_position = Math.round(Math.abs(t/div));
-
-            color_position = ((color_position >= lc_len) ? lc_len-1 : color_position);
-
-            return {
-                strokeColor: line_colors[color_position]
-            }
-        });
-
-        getUserLocation(map);*/
+        getJson(tryParse, map);
+        getUserLocation(map);
     }
 
-    function getColors(min, max) {
+    function getColors(max, min) {
         var r = 255,
             g = 0,
             b = 0,
-            delta = 150,
+            color_delta = getDelta(min, max, 'color'),
+            delta = getDelta(min, max, 'degrees'),
             current = 'red',
-            colors = [];
-
-        for(var i= Math.round(Math.abs(max - min) / 5); i>0; i--) {
+            colors = [],
+            answer = [];
+        
+        for(var i= getDelta(min, max); i>0; i--) {
             if(current == 'red') {
-                if (g + delta < 255) {
-                    g += delta;
+                if (g + color_delta < 255) {
+                    g += color_delta;
                 } else {
                     current = 'green';
                     g = 255;
                 }
             } else if(current == 'green')  {
-                if(r - delta > 0) {
-                    r -= delta;
+                if(r - color_delta > 0) {
+                    r -= color_delta;
                 } else {
                     r = 0;
-                    if(b + delta > 255) {
+                    if(b + color_delta > 255) {
                         current = 'blue';
                         b = 255;
                     } else {
-                        b += delta;
+                        b += color_delta;
                     }
                 }
             } else {
-                if(g - delta > 0) {
-                    g -= delta;
+                if(g - color_delta > 0) {
+                    g -= color_delta;
                 } else {
                     g = 0;
-                    if(r + delta < 255) {
-                        r += delta;
+                    if(r + color_delta < 255) {
+                        r += color_delta;
                     } else {
-                        current = 'red'
+                        current = 'red';
                         r = 255;
                     }
                 }
             }
             colors.push('#' + ((r < 16) ? 0 + r.toString(16) : r.toString(16)) + ((g < 16) ? 0 + g.toString(16) : g.toString(16)) + ((b < 16) ? 0 + b.toString(16) : b.toString(16)));
         }
-        return colors.reverse();
+
+        colors = colors.reverse();
+
+        for(var i= colors.length - 1, j = max; i>= 0; i--) {
+            var o = {};
+            if(i == colors.length - 1) {
+                o.min = j - delta;
+                o.max = j;
+            } else if(i == 0) {
+                if(j-1 <= min) {
+                    o.min = j - delta;
+                    o.max = j-1;
+                } else {
+                    o.min = min;
+                    o.max = j-1;
+                }
+            } else {
+                o.min = j - delta;
+                o.max = j-1;
+            }
+            o.color = colors[i];
+            answer.push(o);
+            j-=delta;
+        }
+        return answer;
     }
 
-    // todo вообще-то тут все должно быть параметризировано))
+    function getDelta(min, max, param) {
 
-    function createColorsLegend(colors) {
+        var delta = Math.abs(max - min),
+            param = ((param == undefined) ? 'count' : param),
+            les_10 = {
+                color: 150,
+                degrees: 2,
+                count: Math.round(delta/2)
+            },
+            les_45 = {
+                color: 75,
+                degrees: 3,
+                count: Math.round(delta/3)
+            },
+            more_45 = {
+                color: 35,
+                degrees: 5,
+                count: Math.round(delta/5)
+            };
+
+        if(delta <= 10 ) {
+            return les_10[param];
+        } else if(delta <= 45) {
+            return les_45[param];
+        } else {
+            return more_45[param];
+        }
+    }
+
+    function createColorsLegend(colors, max, min) {
         var map = document.getElementById('map_container'),
-            legend = document.createElement('ul');
+            legend = document.createElement('ul'),
+            delta = Math.round(Math.abs(max - min) / getDelta(min, max));
 
-        for(var i= colors.length - 1, j = 14; i>= 0; i--) {
+        for(var i= colors.length - 1, j = max; i>= 0; i--) {
             var li = legend.appendChild(document.createElement('li')),
                 colored_span = li.appendChild(document.createElement('span')),
                 label = li.appendChild(document.createElement('span'));
 
-            colored_span.style.backgroundColor = colors[i];
+            colored_span.style.backgroundColor = colors[i].color;
+            label.textContent = colors[i].max + '..' + colors[i].min;
             colored_span.className = 'legend_colored';
-
-            label.textContent = ((j > 0) ? '+' : '') + j + ' .. ' + (((j -= 3) > 0) ? '+' : '') + j;
             label.className = 'legend_label';
         }
 
@@ -192,4 +251,4 @@
 
     global.animationApi.initializeMap = initMap;
 
-})(this, google, document, InfoBox, navigator);
+})(this, google, document, navigator);
