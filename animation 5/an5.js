@@ -68,9 +68,23 @@
             },
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        map.data.loadGeoJson(getUrl('initial_data/minimas.json'));
+        map.data.loadGeoJson(getUrl('initial_data/maximas.json'));
 
-        var line_colors = getColors(),
+        var temperature_borders = {
+            max: 0,
+            min: 1000000
+        };
+        map.data.forEach(function(feature) {
+            var t = feature.getProperty('temperature');
+            console.log('aaaa');
+            temperature_borders.max = ((t > temperature_borders.max) ? t : temperature_borders.max);
+            temperature_borders.min = ((t < temperature_borders.min) ? t : temperature_borders.min);
+
+        });
+
+        console.log(map.data.hasOwnProperty('forEach'));
+        console.log(map.data.hasOwnProperty('loadGeoJson'));
+/*        var line_colors = getColors(temperature_borders.min, temperature_borders.max),
             lc_len = line_colors.length,
             div = 3;
 
@@ -87,10 +101,10 @@
             }
         });
 
-        getUserLocation(map);
+        getUserLocation(map);*/
     }
 
-    function getColors() {
+    function getColors(min, max) {
         var r = 255,
             g = 0,
             b = 0,
@@ -98,7 +112,7 @@
             current = 'red',
             colors = [];
 
-        for(var i= 5; i>0; i--) {
+        for(var i= Math.round(Math.abs(max - min) / 5); i>0; i--) {
             if(current == 'red') {
                 if (g + delta < 255) {
                     g += delta;
