@@ -26,7 +26,8 @@
                             show: true,
                             barWidth: 0.5,
                             align: "center"
-                        }
+                        },
+                        color: '#5786FC'
                     },
                     grid: {
                         hoverable: true

@@ -24,7 +24,7 @@
         var xhr = new XMLHttpRequest();
 
         // send request
-        xhr.open('GET', global.location.href.replace(/\w*.\w*$/,'') + url, true);
+        xhr.open('GET', global.location.href.replace(/\w*.html|php$/,'') + url, true);
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState != 4) {

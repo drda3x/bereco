@@ -7,9 +7,9 @@
 
     function getJson(callback, context) {
         var xhr = new XMLHttpRequest(),
-            file_pth = 'initial_data/AreaMaximaInundable.json';
+            file_pth = 'initial_data/maximas.json';
 
-        xhr.open('GET', global.location.href.replace(/(\/\w*.html)$|(\/\w*.php)$/,'/') + file_pth, true);
+        xhr.open('GET', global.location.href.replace(/\/[A-Za-z0-9%]*\.\w*$/,'/') + file_pth, true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState != 4) {
                 return;
@@ -54,7 +54,7 @@
 
             for(var i= 0, j= data.features.length; i<j; i++) {
                 var feature = data.features[i],
-                    val = parseInt(feature.properties.GRIDCODE);
+                    val = parseInt(feature.properties.temperature);
 
                 if(val) {
                     temperature_values.push(val);
@@ -82,7 +82,7 @@
             map.data.addGeoJson(data);
 
             map.data.setStyle(function(feature){
-                var t = feature.getProperty('GRIDCODE'),
+                var t = feature.getProperty('temperature'),
                     color;
 
                 for(i= 0, j= colors.length; i<j; i++) {
@@ -94,8 +94,7 @@
 
                 return {
                     strokeColor: color,
-                    fillColor: color,
-                    strokeWeight: 0
+                    fillColor: color
                 }
             });
         };
@@ -216,11 +215,12 @@
         var map = document.getElementById('map_container'),
             legend = document.createElement('ul'),
             delta = Math.round(Math.abs(max - min) / getDelta(min, max));
-
+        legend.className = 'map_ul';
         for(var i= colors.length - 1, j = max; i>= 0; i--) {
             var li = legend.appendChild(document.createElement('li')),
                 colored_span = li.appendChild(document.createElement('span')),
                 label = li.appendChild(document.createElement('span'));
+            li.className = 'map_li';
 
             colored_span.style.backgroundColor = colors[i].color;
             label.textContent = colors[i].max + '..' + colors[i].min;
