@@ -4,41 +4,43 @@
     <meta charset="UTF-8">
     <title>Buenos Aires weather screen</title>
     <link rel="stylesheet" href="weather.css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/weatherWidget.js"></script>
 </head>
 <body>
 <div class="weatherInfoScreen">
     CUIDAD DE BUENOS AIRES, CUIDAD AUTONOMA DE BUENOS AIRES
 <div class="weatherInfoScreen_infoBox">
     <div class="weatherInfoScreen_infoBox_item current">
-        <div class="currentDate">07/05/2014</div>
+        <div class="date">07/05/2014</div>
         <div class="deg">10&deg;</div><img class="weatherInfoScreen_img main" src="static/pictogramas/Pictogramas%20clima-01_1.png" />
-        <span>MAX 15&deg;</span>
-        <span>MIN 0&deg;</span>
+        <span class="temperature">MAX 15&deg;</span>
+        <span class="temperature">MIN 0&deg;</span>
         <div class="footer"><img src="static/pictogramas/wind.png" /><span>25kml</span></div>
         <div class="footer"><img src="static/pictogramas/moisture.png" /><span>15%</span></div>
     </div>
-    <div class="weatherInfoScreen_infoBox_item nonCurrent">
-        <div>08/05/2014</div>
+    <div class="weatherInfoScreen_infoBox_item">
+        <div class="date">08/05/2014</div>
         <img class="weatherInfoScreen_img" src="static/pictogramas/Pictogramas%20clima-01_1.png" />
-        <div>25&deg;/9&deg;</div>
+        <div class="temperature">25&deg;/9&deg;</div>
         <div class="footer">
             <div><img src="static/pictogramas/wind.png" /><span>25kml</span></div>
             <div><img src="static/pictogramas/moisture.png" /><span>15%</span></div>
         </div>
     </div>
-    <div class="weatherInfoScreen_infoBox_item nonCurrent">
-        <div>09/05/2014</div>
+    <div class="weatherInfoScreen_infoBox_item">
+        <div class="date">09/05/2014</div>
         <img class="weatherInfoScreen_img" src="static/pictogramas/Pictogramas%20clima-01_1.png" />
-        <div>25&deg;/9&deg;</div>
+        <div class="temperature">25&deg;/9&deg;</div>
         <div class="footer">
             <div><img src="static/pictogramas/wind.png" /><span>25kml</span></div>
             <div><img src="static/pictogramas/moisture.png" /><span>15%</span></div>
         </div>
     </div>
-    <div class="weatherInfoScreen_infoBox_item nonCurrent">
-        <div>10/05/2014</div>
+    <div class="weatherInfoScreen_infoBox_item">
+        <div class="date">10/05/2014</div>
         <img class="weatherInfoScreen_img" src="static/pictogramas/Pictogramas%20clima-01_1.png" />
-        <div>25&deg;/9&deg;</div>
+        <div class="temperature">25&deg;/9&deg;</div>
         <div class="footer">
             <div><img src="static/pictogramas/wind.png" /><span>25kml</span></div>
             <div><img src="static/pictogramas/moisture.png" /><span>15%</span></div>
@@ -46,5 +48,8 @@
     </div>
 </div>
 </div>
+<script>
+    this.weatherWidget();
+</script>
 </body>
 </html>

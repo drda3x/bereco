@@ -1,0 +1,45 @@
+{
+    "ok": "true",
+    "conditions": {
+        "today": {
+            "temperature_c": 20,
+            "forecast_text": "Party Cloudy",
+            "humidty_perc": 71,
+            "min": 18,
+            "max": 22,
+            "date": "2014-09-08",
+            "feels_c": null,
+            "wind": "NNE 9.0 km/h"
+        },
+        "tomorrow": {
+            "temperature_c": 13.5,
+            "forecast_text": "Clear",
+            "humidty_perc": 55,
+            "min": 9,
+            "max": 22,
+            "date": "2014-09-09",
+            "feels_c": null,
+            "wind": "W 7.0 km/h"
+        },
+        "tomorrow_plus_1": {
+            "temperature_c": 20,
+            "forecast_text": "Party Cloudy",
+            "humidty_perc": 71,
+            "min": 18,
+            "max": 22,
+            "date": "2014-09-10",
+            "feels_c": null,
+            "wind": "S 3.0 km/h"
+        },
+        "tomorrow_plus_2": {
+            "temperature_c": 20,
+            "forecast_text": "Party Cloudy",
+            "humidty_perc": 71,
+            "min": 18,
+            "max": 22,
+            "date": "2014-09-11",
+            "feels_c": null,
+            "wind": "NNE 9.0 km/h"
+        }
+    }
+}
