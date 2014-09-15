@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Clima</title>
+		<link rel="icon" href="images/favicon.ico">
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<link rel="stylesheet" href="css/camera.css">
+		<link rel="stylesheet" href="css/component.css">
+		<link rel="stylesheet" href="css/style.css">
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery-migrate-1.1.1.js"></script>
+		<script src="js/jquery.equalheights.js"></script>
+		<script src="js/jquery.ui.totop.js"></script>
+		<script src="js/jquery.easing.1.3.js"></script>
+		<script src="js/camera.js"></script>
+		<script src="js/snap.svg-min.js"></script>
+		<!--[if (gt IE 9)|!(IE)]><!-->
+		<script src="js/jquery.mobile.customized.min.js"></script>
+		<!--<![endif]-->
+		<script>
+		$(document).ready(function(){
+			jQuery('#camera_wrap').camera({
+			loader: false,
+			pagination: true ,
+			minHeight: '394',
+			thumbnails: false,
+			height: '40.1875%',
+			caption: false,
+			navigation: false,
+			fx: 'mosaic'
+			});
+			$().UItoTop({ easingType: 'easeOutQuart' });
+		})
+		</script>
+	</head>
+	<body class="page1">
+
+		<header>
+			<div class="container_12">
+				<div class="grid_12">
+<h1><a href="clima.html"><img src="images/boton_clima.png" alt="clima"></a>
+  <img src="images/boton_ciudad.png" alt="ciudad"> <img src="images/boton_vos.png" alt="vos"></h1>
+  <p align="center">
+  <img src="images/boton_p.png" alt="boton_p">
+  <img src="images/boton_p.png" alt="boton_p">
+  <img src="images/boton_p.png" alt="boton_p">
+  <img src="images/boton_p.png" alt="boton_p">
+  <img src="images/boton_p.png" alt="boton_p">
+  </p>
+  
+			  </div>
+			</div>
+		</header>
+<div class="container_12" style="alignment-adjust:middle"><img src="images/txt_home.png" alt="txt_home"></div>
+
+<footer>
+<div class="container_12">
+<div class="grid_12">
+<div class="socials">
+<img src="images/social-04.png" alt="facebook">
+<img src="images/social-03.png" alt="twitter"> 
+<img src="images/social-05.png" alt="google">
+</div>
+</div>
+</div>
+</footer>
+
+
+<script>
+			$(document).ready(function(){
+			 $(".bt-menu-trigger").toggle(
+				function(){
+				$('.bt-menu').addClass('bt-menu-open');
+				},
+				function(){
+				$('.bt-menu').removeClass('bt-menu-open');
+				}
+			);
+			});
+			(function() {
+			function init() {
+				var speed = 250,
+				easing = mina.easeinout;
+				[].slice.call ( document.querySelectorAll( '#grid > a' ) ).forEach( function( el ) {
+				var s = Snap( el.querySelector( 'svg' ) ), path = s.select( 'path' ),
+					pathConfig = {
+					from : path.attr( 'd' ),
+					to : el.getAttribute( 'data-path-hover' )
+					};
+				el.addEventListener( 'mouseenter', function() {
+					path.animate( { 'path' : pathConfig.to }, speed, easing );
+				} );
+				el.addEventListener( 'mouseleave', function() {
+					path.animate( { 'path' : pathConfig.from }, speed, easing );
+				} );
+				} );
+			}
+			init();
+			})();
+		</script>
+	</body>
+</html>

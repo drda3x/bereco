@@ -7,7 +7,7 @@
 
     function getJson(callback, context) {
         var xhr = new XMLHttpRequest(),
-            file_pth = 'initial_data/AreaMaximaInundable.json';
+            file_pth = 'initial_data/maximas.json';
 
         xhr.open('GET', global.location.href.replace(/(\/\w*.html)$|(\/\w*.php)$/,'/') + file_pth, true);
         xhr.onreadystatechange = function() {
@@ -26,7 +26,6 @@
 
         function tryParse(err, str) {
 
-<<<<<<< Updated upstream
             if(err) {
                 throw err;
             }
@@ -37,27 +36,6 @@
                 if(!json.features || !json.features instanceof Array) {
                     throw 'Expected feature field in json and it has to be an array';
                 }
-=======
-        map.data.loadGeoJson(getUrl('initial_data/maximas.json'));
-
-        var temperature_borders = {
-            max: 0,
-            min: 1000000
-        };
-        map.data.forEach(function(feature) {
-            var t = feature.getProperty('temperature');
-            console.log('aaaa');
-            temperature_borders.max = ((t > temperature_borders.max) ? t : temperature_borders.max);
-            temperature_borders.min = ((t < temperature_borders.min) ? t : temperature_borders.min);
-
-        });
-
-        console.log(map.data.hasOwnProperty('forEach'));
-        console.log(map.data.hasOwnProperty('loadGeoJson'));
-/*        var line_colors = getColors(temperature_borders.min, temperature_borders.max),
-            lc_len = line_colors.length,
-            div = 3;
->>>>>>> Stashed changes
 
                 createLines(json);
 
@@ -72,12 +50,11 @@
                 return;
             }
 
-<<<<<<< Updated upstream
             var temperature_values = [];
 
             for(var i= 0, j= data.features.length; i<j; i++) {
                 var feature = data.features[i],
-                    val = parseInt(feature.properties.GRIDCODE);
+                    val = parseInt(feature.properties.temperature);
 
                 if(val) {
                     temperature_values.push(val);
@@ -105,7 +82,7 @@
             map.data.addGeoJson(data);
 
             map.data.setStyle(function(feature){
-                var t = feature.getProperty('GRIDCODE'),
+                var t = feature.getProperty('temperature'),
                     color;
 
                 for(i= 0, j= colors.length; i<j; i++) {
@@ -117,8 +94,7 @@
 
                 return {
                     strokeColor: color,
-                    fillColor: color,
-                    strokeWeight: 0
+                    fillColor: color
                 }
             });
         };
@@ -135,28 +111,16 @@
     }
 
     function getColors(max, min) {
-=======
-        getUserLocation(map);*/
-    }
-
-    function getColors(min, max) {
->>>>>>> Stashed changes
         var r = 255,
             g = 0,
             b = 0,
             color_delta = getDelta(min, max, 'color'),
             delta = getDelta(min, max, 'degrees'),
             current = 'red',
-<<<<<<< Updated upstream
             colors = [],
             answer = [];
         
         for(var i= getDelta(min, max); i>0; i--) {
-=======
-            colors = [];
-
-        for(var i= Math.round(Math.abs(max - min) / 5); i>0; i--) {
->>>>>>> Stashed changes
             if(current == 'red') {
                 if (g + color_delta < 255) {
                     g += color_delta;
