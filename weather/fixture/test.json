@@ -3,7 +3,7 @@
     "conditions": {
         "today": {
             "temperature_c": 20,
-            "forecast_text": "Party Cloudy",
+            "forecast_text": "Partly Cloudy",
             "humidty_perc": 71,
             "min": 9,
             "max": 20,
@@ -23,7 +23,7 @@
         },
         "tomorrow_plus_1": {
             "temperature_c": 22,
-            "forecast_text": "Party Cloudy",
+            "forecast_text": "Partly Cloudy",
             "humidty_perc": 66,
             "min": 11,
             "max": 22,
@@ -33,7 +33,7 @@
         },
         "tomorrow_plus_2": {
             "temperature_c": 23,
-            "forecast_text": "Party Cloudy",
+            "forecast_text": "Partly Cloudy",
             "humidty_perc": 77,
             "min": 12,
             "max": 23,

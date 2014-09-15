@@ -4,6 +4,26 @@
 
 (function (g) {
 
+    pictograms = {
+        chance_rain: 13,
+        chance_of_rain: 13,
+        chance_of_snow: 12,
+        chance_of_a_thunderstorm: 15,
+        clear: 3,
+        fog: 2,
+        ice_pellets: 6,
+        light_snow: 12,
+        mostly_cloudy: 2,
+        overcast: 2,
+        partly_cloudy: 1,
+        rain: 4,
+        rain_showers: 8,
+        scattered_clouds: 1,
+        snow: 3,
+        snow_showers: 3,
+        thunderstorm: 7
+    };
+
     function initWidget() {
 
         $.getJSON('../weather/fixture/test.json', function (json) {
@@ -22,7 +42,8 @@
 
                     var temp = $(this).find('.temperature'),
                         wind = $(this).find('.footer span:first'),
-                        humidty = $(this).find('.footer span:last');
+                        humidty = $(this).find('.footer span:last'),
+                        img = $(this).find('.weatherInfoScreen_img');
 
                     if ($(this).hasClass('current')) {
                         $(this).find('.currentTemperature').html(data[index].temperature_c + '&deg;');
@@ -31,7 +52,11 @@
                     } else {
                         $(temp).html(data[index].max + '&deg;/' + data[index].min + '&deg;');
                     }
+console.log(data[index].forecast_text.toLowerCase().replace(/\s/g,'_'));
+                    pictogram = pictograms[data[index].forecast_text.toLowerCase().replace(/\s/g,'_')];
+                    pictogram = ((pictogram < 10) ? '0' + pictogram : pictogram);
 
+                    img.attr('src', '../weather/static/pictogramas/Pictogramas_clima-'+ pictogram +'.png');
                     wind.html(parseFloat(data[index].wind.match(/\d*\.\d*/g)[0]));
                     humidty.html(data[index].humidty_perc);
                     index++;
