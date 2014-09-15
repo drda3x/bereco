@@ -16,7 +16,7 @@ body {
 
 .weatherInfoScreen_infoBox {
     list-style: none outside none;
-    padding: 50px 0px;
+    padding: 80px 0px;
 }
 
 .weatherInfoScreen_img {
@@ -26,7 +26,7 @@ body {
 .weatherInfoScreen_infoBox_item {
     background-color: #686969;
     display: inline-block;
-    height: 220px;
+    height: 198px;
     margin: 0px 8px;
     opacity: 0.8;
     padding: 7px 0px;
@@ -35,7 +35,7 @@ body {
 }
 
 .weatherInfoScreen_infoBox_item img {
-    padding: 30px 50px;
+    padding: 30px 0px 4px 50px;
 }
 
 .currentDate {
@@ -60,16 +60,25 @@ body {
 
 .current img {
     display: inline-block;
-    margin: -22px 50px;
+    margin: -22px 20px;
     padding: 0px 0px 51px;
 }
 
-.current > :nth-last-child(2) {
-    margin: 0px 25px 0px 190px;
+.current > span {
+    font-size: 13pt;
+    margin: 0px 12px;
+    padding: 0px;
 }
 
 .footer {
     display: inline-block;
+    font-size: 13pt;
+    margin: 0px 0px 0px 12px;
+    padding: 0px;
+}
+
+.footer span {
+    margin: 0px 4px;
 }
 
 .footer img {
@@ -78,12 +87,25 @@ body {
 }
 
 .footer img:nth-of-type(1) {
-    padding: 4px 0px;
+    padding: 0px;
 }
 
-.footer span {
-    bottom: 6px;
-    font-size: 17pt;
-    left: 5px;
+.nonCurrent {
     position: relative;
+}
+
+.nonCurrent .footer {
+    bottom: 2px;
+    font-size: 11pt;
+    margin: 0px 10px;
+    position: absolute;
+}
+
+.nonCurrent .footer div {
+    display: inline-block;
+    margin: 0px 6px;
+}
+
+.nonCurrent div:nth-of-type(2) {
+    text-align: center;
 }
