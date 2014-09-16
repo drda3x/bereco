@@ -1,11 +1,37 @@
+@font-face {
+    font-family: "Brandon_med";
+    src: url("./static/fonts/Brandon_med.otf");
+}
+
+@font-face {
+    font-family: "Brandon_light";
+    src: url("./static/fonts/Brandon_light.otf");
+}
+
+@font-face {
+    font-family: "Brandon_blk";
+    src: url("./static/fonts/Brandon_blk.otf");
+}
+
 body {
     background-image: url("./img/fondo_web.jpg");
+}
+
+.date {
+    font-family: "Brandon_med";
+    font-size: 12pt;
+    padding: 0px 17px;
+}
+
+.label {
+    font-family: "Brandon_med";
+    font-size: 12pt;
 }
 
 .weatherInfoScreen {
     background-color: #504b4b;
     color: #ffffff;
-    font-family: sans-serif;
+    font-family: "Brandon_light";
     font-size: 10pt;
     height: 386px;
     margin: 0px auto;
@@ -16,24 +42,18 @@ body {
 
 .weatherInfoScreen_infoBox {
     list-style: none outside none;
-    padding: 80px 0px;
+    padding: 46px 0px;
 }
 
 .weatherInfoScreen_infoBox_item {
     background-color: #686969;
     display: inline-block;
-    height: 198px;
+    height: 214px;
     margin: 0px 8px;
     opacity: 0.8;
     padding: 7px 0px;
     vertical-align: top;
     width: 180px;
-}
-
-.weatherInfoScreen_infoBox_item img {
-    display: table;
-    line-height: 100;
-    margin: auto;
 }
 
 .currentTemperature {
@@ -50,8 +70,8 @@ body {
 }
 
 .current .date {
-    font-size: 15pt;
-    margin: 0px;
+    font-size: 17pt;
+    margin: -13px 0px;
     padding: 0px;
     width: inherit;
 }
@@ -76,6 +96,7 @@ body {
 }
 
 .footer span {
+    font-size: 12pt;
     margin: 0px 4px;
 }
 
@@ -93,7 +114,7 @@ body {
 }
 
 .weatherInfoScreen_infoBox_item:not(.current) .footer {
-    bottom: 20px;
+    bottom: 10px;
     font-size: 11pt;
     margin: 0px 10px;
     position: absolute;
@@ -105,5 +126,27 @@ body {
 }
 
 .weatherInfoScreen_infoBox_item:not(.current) div:nth-of-type(2) {
+    text-align: center;
+}
+
+.imageContainer {
+    display: table;
+    height: 110px;
+    width: 100%;
+}
+
+.imageContainer div {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.weatherInfoScreen_img {
+    height: auto;
+    width: 100px;
+}
+
+.temperature {
+    font-size: 13pt;
     text-align: center;
 }

@@ -38,7 +38,9 @@
                     index = 0;
 
                 return function () {
-                    $(this).find('.date').text(data[index].date.replace(/-/g, '/'));
+                    $(this).find('.date').text((function(str) {
+                        return str.split('-').reverse().join('/');
+                    })(data[index].date));
 
                     var temp = $(this).find('.temperature'),
                         wind = $(this).find('.footer span:first'),
@@ -52,21 +54,18 @@
                     } else {
                         $(temp).html(data[index].max + '&deg;/' + data[index].min + '&deg;');
                     }
-console.log(data[index].forecast_text.toLowerCase().replace(/\s/g,'_'));
+
                     pictogram = pictograms[data[index].forecast_text.toLowerCase().replace(/\s/g,'_')];
                     pictogram = ((pictogram < 10) ? '0' + pictogram : pictogram);
 
                     img.attr('src', '../weather/static/pictogramas/Pictogramas_clima-'+ pictogram +'.png');
-                    wind.html(parseFloat(data[index].wind.match(/\d*\.\d*/g)[0]));
-                    humidty.html(data[index].humidty_perc);
+                    wind.html(parseFloat(data[index].wind.match(/\d*\.\d*/g)[0]) + 'kml');
+                    humidty.html(data[index].humidty_perc + '%');
                     index++;
 
                 }
             })();
 
-            console.log(mapData);
-
-            // todo Я что-то забыл, потом проверить все подстановки
             $('.weatherInfoScreen_infoBox_item').each(mapData);
         });
 
