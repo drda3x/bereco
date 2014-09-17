@@ -13,10 +13,6 @@
     src: url("../static/fonts/Brandon_blk.otf");
 }
 
-body {
-    background-image: url("../img/fondo_web.jpg");
-}
-
 .date {
     font-family: "Brandon_med";
     font-size: 12pt;
