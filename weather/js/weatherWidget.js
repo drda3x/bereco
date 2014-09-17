@@ -26,7 +26,7 @@
 
     function initWidget() {
 
-        $.getJSON('../weather/fixture/test.json', function (json) {
+        $.getJSON('http://162.243.252.139:8000/weather/-34.612886/-58.448061', function (json) {
 
             var mapData = (function () {
                 var data = [
@@ -67,6 +67,7 @@
             })();
 
             $('.weatherInfoScreen_infoBox_item').each(mapData);
+            $('.weatherInfoScreen').css('display','block');
         });
 
     }

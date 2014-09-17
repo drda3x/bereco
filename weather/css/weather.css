@@ -1,20 +1,20 @@
 @font-face {
     font-family: "Brandon_med";
-    src: url("./static/fonts/Brandon_med.otf");
+    src: url("../static/fonts/Brandon_med.otf");
 }
 
 @font-face {
     font-family: "Brandon_light";
-    src: url("./static/fonts/Brandon_light.otf");
+    src: url("../static/fonts/Brandon_light.otf");
 }
 
 @font-face {
     font-family: "Brandon_blk";
-    src: url("./static/fonts/Brandon_blk.otf");
+    src: url("../static/fonts/Brandon_blk.otf");
 }
 
 body {
-    background-image: url("./img/fondo_web.jpg");
+    background-image: url("../img/fondo_web.jpg");
 }
 
 .date {
@@ -38,6 +38,7 @@ body {
     opacity: 0.7;
     padding: 50px 30px;
     width: 960px;
+    display: none;
 }
 
 .weatherInfoScreen_infoBox {
