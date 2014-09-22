@@ -58,9 +58,9 @@
                     pictogram = pictograms[data[index].forecast_text.toLowerCase().replace(/\s/g,'_')];
                     pictogram = ((pictogram < 10) ? '0' + pictogram : pictogram);
 
-                    img.attr('src', '../weather/static/pictogramas/Pictogramas_clima-'+ pictogram +'.png');
+                    img.attr('src', './pictogramas/Pictogramas_clima-'+ pictogram +'.png');
                     wind.html(parseFloat(data[index].wind.match(/\d*\.\d*/g)[0]) + 'kml');
-                    humidty.html(data[index].humidty_perc + '%');
+                    humidty.html(data[index].humidity_perc + '%');
                     index++;
 
                 }
