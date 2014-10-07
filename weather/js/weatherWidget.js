@@ -26,7 +26,8 @@
 
     function initWidget() {
 
-        $.getJSON('http://162.243.252.139:8000/weather/-34.612886/-58.448061', function (json) {
+        $.getJSON('../weather/fixture/test.json', function (json) {
+        //$.getJSON('http://162.243.252.139:8000/weather/-34.612886/-58.448061', function (json) {
 
             var mapData = (function () {
                 var data = [
@@ -58,9 +59,9 @@
                     pictogram = pictograms[data[index].forecast_text.toLowerCase().replace(/\s/g,'_')];
                     pictogram = ((pictogram < 10) ? '0' + pictogram : pictogram);
 
-                    img.attr('src', '../weather/static/pictogramas/Pictogramas_clima-'+ pictogram +'.png');
+                    img.attr('src', '../weather/pictogramas/Pictogramas_clima-'+ pictogram +'.png');
                     wind.html(parseFloat(data[index].wind.match(/\d*\.\d*/g)[0]) + 'kml');
-                    humidty.html(data[index].humidty_perc + '%');
+                    humidty.html(data[index].humidity_perc + '%');
                     index++;
 
                 }

@@ -1,16 +1,20 @@
+body {
+    background: url("../img/fondo_web.jpg") repeat scroll 0% 0% transparent;
+}
+
 @font-face {
     font-family: "Brandon_med";
-    src: url("../static/fonts/Brandon_med.otf");
+    src: url("../fonts/Brandon_med.otf");
 }
 
 @font-face {
     font-family: "Brandon_light";
-    src: url("../static/fonts/Brandon_light.otf");
+    src: url("../fonts/Brandon_light.otf");
 }
 
 @font-face {
     font-family: "Brandon_blk";
-    src: url("../static/fonts/Brandon_blk.otf");
+    src: url("../fonts/Brandon_blk.otf");
 }
 
 .date {
@@ -27,14 +31,14 @@
 .weatherInfoScreen {
     background-color: #504b4b;
     color: #ffffff;
+    display: none;
     font-family: "Brandon_light";
     font-size: 10pt;
     height: 270px;
-    margin: 0px auto;
+    margin: 100px auto;
     opacity: 0.7;
     padding: 50px 30px;
     width: 960px;
-    display: none;
 }
 
 .weatherInfoScreen_infoBox {
@@ -55,7 +59,10 @@
 
 .currentTemperature {
     display: inline-block;
-    font-size: 100pt;
+    font-size: 80pt;
+    margin: 0px 15px;
+    padding: 14px 0px 11px;
+    width: 212px;
 }
 
 .current {
@@ -75,13 +82,12 @@
 
 .current img {
     display: inline-block;
-    margin: -22px 20px;
-    padding: 0px 0px 51px;
+    margin: 31px 0px 0px 1px;
 }
 
 .current > span {
     font-size: 13pt;
-    margin: 0px 12px;
+    margin: 0px 15px;
     padding: 0px;
 }
 
