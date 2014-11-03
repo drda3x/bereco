@@ -10,6 +10,11 @@
     function drawGraph(data){
         var series = [],
             placeholder = $('#clima_graph');
+
+        data.sort(function(a,b) {
+            return b.ioa - a.ioa;
+        });
+
         for (var i= 0, j= data.length; i<j; i++) {
             series.push([data[i].forecaster, data[i].ioa]);
         }
