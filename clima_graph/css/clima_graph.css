@@ -1,0 +1,9 @@
+.tickLabel {
+    color: #ffffff;
+}
+.flot-x-axis .flot-tick-label:nth-of-type(odd) {
+    padding: 20px 0;
+}
+#clima_graph {
+    background-color: rgba(169, 179, 192, 0.6);
+}
